@@ -67,7 +67,7 @@ public class GeneticFunctions {
 		return new InterpolationFitnessFunction();
 	}
 
-	public static class InterpolationFitnessFunction implements FitnessFunction<String> {
+	public static class InterpolationFitnessFunction implements FitnessFunction {
 
 		private double[] pointList;
 

@@ -41,7 +41,7 @@ public class GALauncher {
 			double mutationProbability, int maxTime) {
 
 		System.out.println("--- GeneticAlgorithm ---");
-		FitnessFunction<String> fitnessFunction = GeneticFunctions.getFitnessFunction();
+		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction();
 		((InterpolationFitnessFunction) fitnessFunction).setPointList(pointList);
 
 		// Generate an initial population
@@ -49,7 +49,7 @@ public class GALauncher {
 		for (int i = 0; i < populationSize; i++)
 			population.add(GeneticFunctions.generateRandomIndividual());
 
-		GeneticAlgorithm<String> ga = new GeneticAlgorithm<>(crossoverProbability, mutationProbability, maxTime);
+		GeneticAlgorithm ga = new GeneticAlgorithm(crossoverProbability, mutationProbability, maxTime);
 		System.out.println("Starting evolution");
 		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction);
 

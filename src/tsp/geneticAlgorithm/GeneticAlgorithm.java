@@ -11,7 +11,7 @@ import tsp.lib.arithmetic.NumericValueVariable;
 import tsp.lib.arithmetic.Operation;
 import tsp.metricFramework.Algorithm;
 
-public class GeneticAlgorithm<A> extends Algorithm<A> {
+public class GeneticAlgorithm extends Algorithm {
 
 	protected double crossoverProbability;
 	protected double mutationProbability;
@@ -57,7 +57,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return getIterations() % 10 == 0;
 	}
 
-	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction<A> fitnessFn) {
+	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn) {
 		// Initial values
 		metrics.setValue("mutations", 0);
 		metrics.setValue("crossovers", 0);
@@ -114,7 +114,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return bestIndividual;
 	}
 
-	protected void calculateFitness(Collection<Individual> population, FitnessFunction<A> fitnessFn) {
+	protected void calculateFitness(Collection<Individual> population, FitnessFunction fitnessFn) {
 		for (Individual individual : population)
 			individual.setFitness(fitnessFn.apply(individual));
 	}
@@ -160,7 +160,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
 			totalSoFar += fValues[i];
-			if (prob >= totalSoFar) {
+			if (prob <= totalSoFar) {
 				selected = population.get(i);
 				break;
 			}
@@ -205,7 +205,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 			mutatedRepresentation = newOperator;
 		}
 		if (mutationType == 2) { // Change numeric/variable
-			mutateNumericValuesVariables(mutatedRepresentation);
+			//mutateNumericValuesVariables(mutatedRepresentation);
 		}
 
 		metrics.incrementIntValue("mutations");

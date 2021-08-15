@@ -12,7 +12,7 @@ import java.util.TimerTask;
 
 import tsp.geneticAlgorithm.Individual;
 
-public abstract class Algorithm<A> {
+public abstract class Algorithm {
 
 	protected static final String POPULATION_SIZE = "populationSize";
 	protected static final String ITERATIONS = "iterations";

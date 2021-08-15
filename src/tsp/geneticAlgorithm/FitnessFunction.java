@@ -1,6 +1,6 @@
 package tsp.geneticAlgorithm;
 
-public interface FitnessFunction<A> {
+public interface FitnessFunction {
 
 	/**
 	 * 
