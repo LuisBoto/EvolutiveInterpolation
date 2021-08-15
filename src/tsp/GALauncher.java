@@ -14,7 +14,7 @@ import tsp.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunction;
 public class GALauncher {
 
 	public static void main(String[] args) throws ScriptException {
-		String points = args[0];
+		/*String points = args[0];
 		double[] pointList = new double[points.split(",").length];
 		int i = 0;
 		for (String val : points.split("[")[1].split("]")[0].split(",")) {
@@ -27,19 +27,19 @@ public class GALauncher {
 		int popSize = Integer.parseInt(args[3]);
 		double crossoverProbability = Double.parseDouble(args[4]);
 		double mutationProbability = Double.parseDouble(args[5]);
-		int maxTime = Integer.parseInt(args[6]) * 1000;
+		int maxTime = Integer.parseInt(args[6]) * 1000;*/
 
-		/*
-		 * double[] pointList = { 0.0, 1.0, 2.0, 3.0, 4.0}; int popSize = 100; double
-		 * crossoverProbability = 0.8; double mutationProbability = 0.2; int maxTime =
-		 * 1000 * 60 * 1; int reproduce = 1; int mutate = 1;
-		 */
-
-		callGeneticAlgorithm(pointList, popSize, crossoverProbability, mutationProbability, maxTime, reproduce, mutate);
+		
+		double[] pointList = { 4, 1.0, 0, 1, 4.0, 9}; 
+		int popSize = 500; 
+		double crossoverProbability = 0.8;
+		double mutationProbability = 0.2;
+		int maxTime = 500; // 500 iterations 
+		callGeneticAlgorithm(pointList, popSize, crossoverProbability, mutationProbability, maxTime);
 	}
 
 	private static void callGeneticAlgorithm(double[] pointList, int populationSize, double crossoverProbability,
-			double mutationProbability, int maxTime, int reproduceOperator, int mutationOperator) {
+			double mutationProbability, int maxTime) {
 
 		System.out.println("--- GeneticAlgorithm ---");
 		FitnessFunction<String> fitnessFunction = GeneticFunctions.getFitnessFunction();

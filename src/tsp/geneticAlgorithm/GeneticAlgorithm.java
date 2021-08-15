@@ -52,13 +52,16 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 
 	@Override
 	protected boolean stopCondition() {
-		return getTimeInMilliseconds() > this.maxTime;
+		// return getTimeInMilliseconds() > this.maxTime;
+		return getIterations()>=maxTime || metrics.getValue("bestFitness").equals("0.0");
 	}
 
 	@Override
 	protected boolean saveCondition() {
-		long module10s = getTimeInMilliseconds() % 10000;
-		return (module10s > 9950 || module10s < 50); // Every 10s save metrics, with an error margin
+		// long module10s = getTimeInMilliseconds() % 10000;
+		// return (module10s > 9950 || module10s < 50); // Every 10s save metrics, with
+		// an error margin
+		return getIterations() % 10 == 0;
 	}
 
 	public Individual<A> geneticAlgorithm(Collection<Individual<A>> initPopulation, FitnessFunction<A> fitnessFn) {
@@ -83,7 +86,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 			metrics.setValue(Algorithm.ITERATIONS, itCount);
 			metrics.setValue("bestFitness", bestIndividual.getFitness());
 			metrics.setValue("averageFitness", averageFitness(population));
-			printStatus();
+			printStatus(bestIndividual);
 			metricsDumpCheck();
 
 			population = nextGeneration(population, bestIndividual);
@@ -97,19 +100,19 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return bestIndividual;
 	}
 
-	private void printStatus() {
+	private void printStatus(Individual<A> bestIndividual) {
 		// Monitor average and best fitness, time, iteration etc.
 		System.out.println("\nTime: " + getTimeInMilliseconds() + " Gen: " + getIterations() + " Best f: "
-				+ metrics.getValue("bestFitness") + " Average f:" + metrics.getValue("averageFitness"));
+				+ metrics.getValue("bestFitness") + " Best individual: " + bestIndividual.toString());
 	}
 
 	public Individual<A> retrieveBestIndividual(Collection<Individual<A>> population) {
 		Individual<A> bestIndividual = null;
-		double bestSoFarFValue = 0;
+		double bestSoFarFValue = Double.POSITIVE_INFINITY;
 
 		for (Individual<A> individual : population) {
 			double fValue = individual.getFitness();
-			if (fValue > bestSoFarFValue) {
+			if (fValue < bestSoFarFValue) {
 				bestIndividual = individual;
 				bestSoFarFValue = fValue;
 			}
@@ -220,16 +223,16 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 	protected Individual<A> mutate(Individual<A> child) {
 		// 50% to add new operation to existing equation
 		// 50% to remove last operator
-		// Independent coin toss to change numeric value and/or equation variables
-		Operation mutatedRepresentation;
+		// Independent 10% to change numeric value and/or equation variables
+		Operation mutatedRepresentation = child.getRepresentation();
 		if (random.nextBoolean()) { // Add operation
 			mutatedRepresentation = GeneticFunctions.getRandomOperation();
 			mutatedRepresentation.setFirstOperator(child.getRepresentation());
-		} else { // Remove last operation
+		} else if (child.getRepresentation().isRemovable()) { // Remove last operation if possible
 			mutatedRepresentation = child.getRepresentation().getFirstOperator();
 		}
 
-		if (random.nextBoolean())
+		if (random.nextDouble() * 100 < 10)
 			mutatedRepresentation.mutateNumericValuesVariables();
 
 		metrics.incrementIntValue("mutations");
@@ -244,15 +247,14 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		if (population.size() < 1) {
 			throw new IllegalArgumentException("Must start with at least a population of size 1");
 		}
-
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected String getExecutionFilename() {
-		return "GAInterpolation_" + getPopulationSize() + "_"
-				+ crossoverProbability + "_" + mutationProbability + "_" + maxTime + "_GMT_"
-				+ new Date().toGMTString().replace(':', '_').replace(" ", "_") + random.nextInt(10000) + ".csv";
+		return "GAInterpolation_" + getPopulationSize() + "_" + crossoverProbability + "_" + mutationProbability + "_"
+				+ maxTime + "_GMT_" + new Date().toGMTString().replace(':', '_').replace(" ", "_")
+				+ random.nextInt(10000) + ".csv";
 	}
 
 }

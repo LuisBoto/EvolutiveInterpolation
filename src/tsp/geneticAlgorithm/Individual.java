@@ -37,6 +37,6 @@ public class Individual<A> {
 
 	@Override
 	public String toString() {
-		return representation.toString() + descendants;
+		return representation.toString();
 	}
 }

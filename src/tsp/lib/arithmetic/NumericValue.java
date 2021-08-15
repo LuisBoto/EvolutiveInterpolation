@@ -1,5 +1,7 @@
 package tsp.lib.arithmetic;
 
+import java.text.DecimalFormat;
+
 public class NumericValue extends Operation {
 
 	private double value;
@@ -20,7 +22,8 @@ public class NumericValue extends Operation {
 
 	@Override
 	public String toString() {
-		return String.valueOf(this.value);
+		DecimalFormat df = new DecimalFormat("####.##");
+		return df.format(this.value);
 	}
 
 }

@@ -16,6 +16,11 @@ public abstract class Operation {
 
 	public abstract String toString();
 
+	public boolean isRemovable() {
+		// Returns whether the operation is shrinkable
+		return !(this instanceof Variable || this instanceof NumericValue);
+	}
+
 	public void setFirstOperator(Operation operator) {
 		this.firstOperator = operator;
 	}
