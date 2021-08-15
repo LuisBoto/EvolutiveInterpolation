@@ -92,7 +92,7 @@ public class GeneticFunctions {
 				fitness += Math.abs(pointList[i] - individual.getRepresentation().computeValue(i));
 			}
 
-			return fitness; // Less fitness is better
+			return 1/fitness; // Less fitness value is better
 		}
 	}
 

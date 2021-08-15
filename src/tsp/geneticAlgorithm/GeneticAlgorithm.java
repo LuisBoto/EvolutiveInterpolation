@@ -11,37 +11,24 @@ import tsp.metricFramework.Algorithm;
 
 public class GeneticAlgorithm<A> extends Algorithm<A> {
 
-	protected String instanceName;
-	protected int individualLength;
 	protected double crossoverProbability;
 	protected double mutationProbability;
 	protected int maxTime;
 	protected Random random;
-	protected int reproduceOperator;
-	protected int mutateOperator;
 
-	public GeneticAlgorithm(String instanceName, int individualLength, double crossoverProbability,
-			double mutationProbability, int maxTime, int reproduceOperator, int mutateOperator) {
-		this(individualLength, crossoverProbability, mutationProbability, maxTime, reproduceOperator, mutateOperator,
-				new Random());
-		this.instanceName = instanceName;
+	public GeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime) {
+		this(crossoverProbability, mutationProbability, maxTime, new Random());
 	}
 
-	public GeneticAlgorithm(int individualLength, double crossoverProbability, double mutationProbability, int maxTime,
-			int reproduceOperator, int mutateOperator, Random random) {
+	public GeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime, Random random) {
 		super(); // Calls createTrackers and thread
-		this.individualLength = individualLength;
 		this.crossoverProbability = crossoverProbability;
 		this.mutationProbability = mutationProbability;
 		this.maxTime = maxTime;
 		this.random = random;
-		this.mutateOperator = mutateOperator;
-		this.reproduceOperator = reproduceOperator;
 
 		assert (this.mutationProbability >= 0.0 && this.mutationProbability <= 1.0);
 		assert (this.crossoverProbability >= 0.0 && this.crossoverProbability <= 1.0);
-		assert (this.mutateOperator == 0 || this.mutateOperator == 1);
-		assert (this.reproduceOperator == 0 || this.reproduceOperator == 1);
 	}
 
 	@Override
@@ -134,10 +121,10 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 			Individual<A> y = randomSelection(population);
 			Individual<A> child = x;
 			if (random.nextDouble() <= crossoverProbability)
-				child = this.reproduceOperator == 0 ? this.reproduce(x, y) : this.reproduce2(x, y);
+				child = this.reproduce(x, y);
 
 			if (random.nextDouble() <= mutationProbability) {
-				child = this.mutateOperator == 0 ? this.mutate(child) : this.mutate2(child);
+				child = this.mutate(child);
 			}
 			newPopulation.add(child);
 		}
@@ -213,30 +200,6 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return new Individual<A>(childRepresentation);
 	}
 
-	protected Individual<A> reproduce2(Individual<A> x, Individual<A> y) {
-		// Halfs cross operator
-		int workingIndividualLength = individualLength - 1;
-		List<A> childRepresentation = new ArrayList<A>();
-		int randSize = this.random.nextInt(workingIndividualLength);
-
-		// Adding random amount of cities from first parent, on same order
-		for (int i = 0; i < randSize; i++) {
-			childRepresentation.add(x.getRepresentation().get(i));
-		}
-
-		// Inheriting the rest from second parent, on inverse relative order
-		for (int i = workingIndividualLength - 1; i >= 0; i--) {
-			if (!childRepresentation.contains(y.getRepresentation().get(i))) {
-				childRepresentation.add(y.getRepresentation().get(i));
-			}
-		}
-
-		// Last city must be initial one
-		childRepresentation.add(individualLength - 1, childRepresentation.get(0));
-		metrics.incrementIntValue("crossovers");
-		return new Individual<A>(childRepresentation);
-	}
-
 	protected double averageFitness(List<Individual<A>> population) {
 		double totalFitness = 0.0;
 		for (int i = 0; i < population.size(); i++) {
@@ -262,21 +225,6 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return new Individual<A>(mutatedRepresentation);
 	}
 
-	protected Individual<A> mutate2(Individual<A> child) {
-		// Reverse individual
-		int workingIndividualLength = individualLength - 1;
-		List<A> mutatedRepresentation = new ArrayList<A>();
-
-		for (int i = workingIndividualLength - 1; i >= 0; i--) {
-			mutatedRepresentation.add(child.getRepresentation().get(i));
-		}
-
-		// Last city must be initial one
-		mutatedRepresentation.add(individualLength - 1, mutatedRepresentation.get(0));
-		metrics.incrementIntValue("mutations");
-		return new Individual<A>(mutatedRepresentation);
-	}
-
 	protected int randomOffset(int length) {
 		return random.nextInt(length);
 	}
@@ -285,21 +233,14 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		if (population.size() < 1) {
 			throw new IllegalArgumentException("Must start with at least a population of size 1");
 		}
-		// String lengths are assumed to be of fixed size,
-		// therefore ensure initial populations lengths correspond to this
-		for (Individual<A> individual : population) {
-			if (individual.length() != this.individualLength) {
-				throw new IllegalArgumentException("Individual [" + individual
-						+ "] in population is not the required length of " + this.individualLength);
-			}
-		}
+
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected String getExecutionFilename() {
-		return "GATSP_" + this.instanceName + "_" + reproduceOperator + "_" + mutateOperator + "_" + getPopulationSize()
-				+ "_" + crossoverProbability + "_" + mutationProbability + "_" + maxTime + "_GMT_"
+		return "GATSP___" + reproduceOperator + "_" + mutateOperator + "_" + getPopulationSize() + "_"
+				+ crossoverProbability + "_" + mutationProbability + "_" + maxTime + "_GMT_"
 				+ new Date().toGMTString().replace(':', '_').replace(" ", "_") + random.nextInt(10000) + ".csv";
 	}
 
