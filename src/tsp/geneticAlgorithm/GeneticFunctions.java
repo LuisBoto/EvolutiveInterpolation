@@ -59,17 +59,11 @@ public class GeneticFunctions {
 	public static Operation getRandomVariableNumericValue() {
 		// Random variable or numeric value
 		Random rand = new Random();
-		int type = rand.nextInt(2);
-		Operation operator = null;
-		switch (type) {
-		case 0: // Variable
-			operator = new Variable();
-			break;
-		case 1: // Numeric value
-			operator = new NumericValue(rand.nextDouble() * 1000.0);
-			break;
+		if (rand.nextBoolean()) // Variable
+			return new Variable();
+		else {
+			return new NumericValue(rand.nextDouble() * 1000.0);
 		}
-		return operator;
 	}
 
 	public static InterpolationFitnessFunction getFitnessFunction() {
