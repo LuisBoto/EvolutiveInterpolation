@@ -25,5 +25,10 @@ public class NumericValue extends Operation {
 		DecimalFormat df = new DecimalFormat("####.##");
 		return df.format(this.value);
 	}
+	
+	@Override
+	public int getLength() {
+		return 1;
+	}
 
 }

@@ -16,11 +16,6 @@ public abstract class Operation {
 
 	public abstract String toString();
 
-	public boolean isRemovable() {
-		// Returns whether the operation is shrinkable
-		return !(this instanceof Variable || this instanceof NumericValue);
-	}
-
 	public void setFirstOperator(Operation operator) {
 		this.firstOperator = operator;
 	}
@@ -38,22 +33,25 @@ public abstract class Operation {
 	}
 
 	public void mutateNumericValuesVariables() {
-		if (this.firstOperator != null) {
+		if (this.getFirstOperator() != null) {
 			if (this.firstOperator instanceof NumericValue || this.firstOperator instanceof Variable) {
 				// Change numeric value or turn into a variable
-				this.firstOperator = GeneticFunctions.getRandomVariableNumericValue();
+				this.setFirstOperator(GeneticFunctions.getRandomVariableNumericValue());
 			} else {
-				this.firstOperator.mutateNumericValuesVariables();
+				this.getFirstOperator().mutateNumericValuesVariables();
 			}
 		}
-		if (this.secondOperator != null) {
+		if (this.getSecondOperator() != null) {
 			if (this.secondOperator instanceof NumericValue || this.secondOperator instanceof Variable) {
 				// Change numeric value or turn into a variable
-				this.secondOperator = GeneticFunctions.getRandomVariableNumericValue();
+				this.setSecondOperator(GeneticFunctions.getRandomVariableNumericValue());
 			} else {
-				this.secondOperator.mutateNumericValuesVariables();
+				this.getSecondOperator().mutateNumericValuesVariables();
 			}
 		}
 	}
 
+	public int getLength() {
+		return this.getFirstOperator().getLength() + this.getSecondOperator().getLength();
+	}
 }

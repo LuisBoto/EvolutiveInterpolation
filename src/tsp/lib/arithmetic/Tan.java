@@ -13,7 +13,16 @@ public class Tan extends Operation {
 
 	@Override
 	public String toString() {
-		return "cos(" + firstOperator.toString() + ")";
+		return "tan(" + firstOperator.toString() + ")";
 	}
 
+	@Override
+	public int getLength() {
+		return this.getFirstOperator().getLength() + 1;
+	}
+	
+	@Override
+	public Operation getSecondOperator() {
+		return null;
+	}
 }

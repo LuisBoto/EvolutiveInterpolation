@@ -15,5 +15,10 @@ public class Variable extends Operation {
 	public String toString() {
 		return "x";
 	}	
+	
+	@Override
+	public int getLength() {
+		return 1;
+	}
 
 }

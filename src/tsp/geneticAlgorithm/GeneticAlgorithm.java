@@ -45,7 +45,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 	@Override
 	protected boolean stopCondition() {
 		// return getTimeInMilliseconds() > this.maxTime;
-		return getIterations()>=maxTime || metrics.getValue("bestFitness").equals("0.0");
+		return getIterations() >= maxTime || metrics.getValue("bestFitness").equals("0.0");
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 
 	public Individual<A> retrieveBestIndividual(Collection<Individual<A>> population) {
 		Individual<A> bestIndividual = null;
-		double bestSoFarFValue = Double.POSITIVE_INFINITY;
+		double bestSoFarFValue = Double.MAX_VALUE;
 
 		for (Individual<A> individual : population) {
 			double fValue = individual.getFitness();
@@ -156,9 +156,9 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		fValues = Util.normalize(fValues);
 
 		double prob = random.nextDouble();
-		double totalSoFar = 1.0;
+		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
-			totalSoFar -= fValues[i];
+			totalSoFar += fValues[i];
 			if (prob >= totalSoFar) {
 				selected = population.get(i);
 				break;
@@ -186,19 +186,25 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 	}
 
 	protected Individual<A> mutate(Individual<A> child) {
-		// 50% to add new operation to existing equation
-		// 50% to remove last operator
-		// Independent 10% to change numeric value and/or equation variables
+		// 30% to change one existing operator type
+		// 30% to remove last half of the equation
+		// 30% to change numeric value and/or equation variables
 		Operation mutatedRepresentation = child.getRepresentation();
-		if (random.nextBoolean()) { // Add operation
-			mutatedRepresentation = GeneticFunctions.getRandomOperation();
-			mutatedRepresentation.setFirstOperator(child.getRepresentation());
-		} else if (child.getRepresentation().isRemovable()) { // Remove last operation if possible
-			mutatedRepresentation = child.getRepresentation().getFirstOperator();
+		int mutationType = random.nextInt(3);
+		if (mutationType == 0) { // Remove last operation if possible
+			if (child.getRepresentation().getLength() > 1)
+				mutatedRepresentation = child.getRepresentation().getFirstOperator();
 		}
-
-		if (random.nextDouble() * 100 < 10)
+		if (mutationType == 1) { // Change numeric/variable
 			mutatedRepresentation.mutateNumericValuesVariables();
+		}
+		if (mutationType == 2) { // Change operator
+			Operation newOperator = GeneticFunctions.getRandomOperation();
+			newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
+			if (mutatedRepresentation.getSecondOperator() != null)
+				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
+			mutatedRepresentation = newOperator;
+		}
 
 		metrics.incrementIntValue("mutations");
 		return new Individual<A>(mutatedRepresentation);

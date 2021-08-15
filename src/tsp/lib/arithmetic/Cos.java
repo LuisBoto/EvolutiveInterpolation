@@ -16,4 +16,13 @@ public class Cos extends Operation {
 		return "cos(" + firstOperator.toString() + ")";
 	}
 
+	@Override
+	public int getLength() {
+		return this.getFirstOperator().getLength() + 1;
+	}
+
+	@Override
+	public Operation getSecondOperator() {
+		return null;
+	}
 }

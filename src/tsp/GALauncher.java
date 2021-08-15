@@ -30,11 +30,11 @@ public class GALauncher {
 		int maxTime = Integer.parseInt(args[6]) * 1000;*/
 
 		
-		double[] pointList = { 4, 1.0, 0, 1, 4.0, 9}; 
-		int popSize = 500; 
-		double crossoverProbability = 0.8;
+		double[] pointList = { 0, 3/2, 3, 4.5, 6, 15/2, 9, 21/2}; 
+		int popSize = 5000; 
+		double crossoverProbability = 0.3;
 		double mutationProbability = 1;
-		int maxTime = 500; // 500 iterations 
+		int maxTime = 5000; // 500 iterations 
 		callGeneticAlgorithm(pointList, popSize, crossoverProbability, mutationProbability, maxTime);
 	}
 

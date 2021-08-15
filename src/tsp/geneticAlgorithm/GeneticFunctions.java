@@ -61,9 +61,9 @@ public class GeneticFunctions {
 		Random rand = new Random();
 		if (rand.nextBoolean()) // Variable
 			return new Variable();
-		else {
+		if (rand.nextBoolean())
 			return new NumericValue(rand.nextDouble() * 1000.0);
-		}
+		return new NumericValue(rand.nextInt(1000));
 	}
 
 	public static InterpolationFitnessFunction getFitnessFunction() {
