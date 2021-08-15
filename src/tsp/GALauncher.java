@@ -31,9 +31,9 @@ public class GALauncher {
 
 		
 		double[] pointList = { 0, 3/2, 3, 4.5, 6, 15/2, 9, 21/2}; 
-		int popSize = 5000; 
+		int popSize = 100; 
 		double crossoverProbability = 0.3;
-		double mutationProbability = 1;
+		double mutationProbability = 0.9;
 		int maxTime = 5000; // 500 iterations 
 		callGeneticAlgorithm(pointList, popSize, crossoverProbability, mutationProbability, maxTime);
 	}

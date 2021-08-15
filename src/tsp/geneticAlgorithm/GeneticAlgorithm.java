@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Random;
 
 import tsp.lib.Util;
+import tsp.lib.arithmetic.NumericValue;
 import tsp.lib.arithmetic.Operation;
+import tsp.lib.arithmetic.Variable;
 import tsp.metricFramework.Algorithm;
 
 public class GeneticAlgorithm<A> extends Algorithm<A> {
@@ -190,24 +192,45 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		// 30% to remove last half of the equation
 		// 30% to change numeric value and/or equation variables
 		Operation mutatedRepresentation = child.getRepresentation();
-		int mutationType = random.nextInt(3);
+		int mutationType = random.nextInt(2);
 		if (mutationType == 0) { // Remove last operation if possible
 			if (child.getRepresentation().getLength() > 1)
 				mutatedRepresentation = child.getRepresentation().getFirstOperator();
 		}
-		if (mutationType == 1) { // Change numeric/variable
-			mutatedRepresentation.mutateNumericValuesVariables();
-		}
-		if (mutationType == 2) { // Change operator
+		if (mutationType == 1) { // Change operator
 			Operation newOperator = GeneticFunctions.getRandomOperation();
+			if (mutatedRepresentation.getFirstOperator() != null)
 			newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
 			if (mutatedRepresentation.getSecondOperator() != null)
 				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
 			mutatedRepresentation = newOperator;
 		}
+		if (mutationType == 2) { // Change numeric/variable
+			mutatedRepresentation = mutateNumericValuesVariables(child.getRepresentation());
+		}
 
 		metrics.incrementIntValue("mutations");
 		return new Individual<A>(mutatedRepresentation);
+	}
+	
+	private Operation mutateNumericValuesVariables(Operation representation) {
+		if (representation.getFirstOperator() != null) {
+			if (representation.getFirstOperator() instanceof NumericValue || representation.getFirstOperator() instanceof Variable) {
+				// Change numeric value or turn into a variable
+				representation.setFirstOperator(GeneticFunctions.getRandomVariableNumericValue());
+			} else {
+				mutateNumericValuesVariables(representation.getFirstOperator());
+			}
+		}
+		if (representation.getSecondOperator() != null) {
+			if (representation.getSecondOperator() instanceof NumericValue || representation.getSecondOperator() instanceof Variable) {
+				// Change numeric value or turn into a variable
+				representation.setSecondOperator(GeneticFunctions.getRandomVariableNumericValue());
+			} else {
+				mutateNumericValuesVariables(representation.getSecondOperator());
+			}
+		}
+		return representation;
 	}
 
 	protected int randomOffset(int length) {

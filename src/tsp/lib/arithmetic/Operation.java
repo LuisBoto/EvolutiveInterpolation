@@ -1,7 +1,5 @@
 package tsp.lib.arithmetic;
 
-import tsp.geneticAlgorithm.GeneticFunctions;
-
 public abstract class Operation {
 
 	protected Operation firstOperator;
@@ -30,25 +28,6 @@ public abstract class Operation {
 
 	public Operation getSecondOperator() {
 		return this.secondOperator;
-	}
-
-	public void mutateNumericValuesVariables() {
-		if (this.getFirstOperator() != null) {
-			if (this.firstOperator instanceof NumericValue || this.firstOperator instanceof Variable) {
-				// Change numeric value or turn into a variable
-				this.setFirstOperator(GeneticFunctions.getRandomVariableNumericValue());
-			} else {
-				this.getFirstOperator().mutateNumericValuesVariables();
-			}
-		}
-		if (this.getSecondOperator() != null) {
-			if (this.secondOperator instanceof NumericValue || this.secondOperator instanceof Variable) {
-				// Change numeric value or turn into a variable
-				this.setSecondOperator(GeneticFunctions.getRandomVariableNumericValue());
-			} else {
-				this.getSecondOperator().mutateNumericValuesVariables();
-			}
-		}
 	}
 
 	public int getLength() {
