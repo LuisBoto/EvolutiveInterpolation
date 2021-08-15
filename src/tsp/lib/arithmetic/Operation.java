@@ -33,4 +33,5 @@ public abstract class Operation {
 	public int getLength() {
 		return this.getFirstOperator().getLength() + this.getSecondOperator().getLength();
 	}
+
 }

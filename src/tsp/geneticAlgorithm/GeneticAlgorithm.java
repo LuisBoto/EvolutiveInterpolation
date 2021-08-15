@@ -166,7 +166,6 @@ public class GeneticAlgorithm extends Algorithm {
 			}
 		}
 
-		selected.incDescendants();
 		return selected;
 	}
 
@@ -187,9 +186,9 @@ public class GeneticAlgorithm extends Algorithm {
 	}
 
 	protected Individual mutate(Individual child) {
-		// 30% to change one existing operator type
-		// 30% to remove last half of the equation
-		// 30% to change numeric value and/or equation variables
+		// 1/3 to change one existing operator type
+		// 1/3 to remove last half of the equation
+		// 1/3 to change numeric value and/or equation variables
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(3);
 		if (mutationType == 0) { // Remove last operation if possible
@@ -199,20 +198,20 @@ public class GeneticAlgorithm extends Algorithm {
 		if (mutationType == 1) { // Change operator
 			Operation newOperator = GeneticFunctions.getRandomOperation();
 			if (mutatedRepresentation.getFirstOperator() != null)
-			newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
+				newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
 			if (mutatedRepresentation.getSecondOperator() != null)
 				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
 			mutatedRepresentation = newOperator;
 		}
 		if (mutationType == 2) { // Change numeric/variable
-			//mutateNumericValuesVariables(mutatedRepresentation);
+			mutatedRepresentation = mutateNumericValuesVariables(child.getRepresentation());
 		}
 
 		metrics.incrementIntValue("mutations");
 		return new Individual(mutatedRepresentation);
 	}
-	
-	private void mutateNumericValuesVariables(Operation representation) {
+
+	private Operation mutateNumericValuesVariables(Operation representation) {
 		if (representation.getFirstOperator() != null) {
 			if (representation.getFirstOperator() instanceof NumericValueVariable) {
 				// Change numeric value or turn into a variable
@@ -229,6 +228,7 @@ public class GeneticAlgorithm extends Algorithm {
 				mutateNumericValuesVariables(representation.getSecondOperator());
 			}
 		}
+		return representation;
 	}
 
 	protected int randomOffset(int length) {

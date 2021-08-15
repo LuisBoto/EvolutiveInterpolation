@@ -44,11 +44,11 @@ public class NumericValueVariable extends Operation {
 	
 	public void mutate() {
 		Random r = new Random();
-		this.isVariable = r.nextBoolean();
+		isVariable = r.nextBoolean();
 		if (r.nextBoolean())
-			this.value= r.nextDouble() * 1000.0;
+			value= r.nextDouble() * 1000.0;
 		else
-			this.value = r.nextInt(1000);
+			value = r.nextInt(1000);
 	}
 
 }

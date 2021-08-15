@@ -5,14 +5,13 @@ import tsp.lib.arithmetic.Operation;
 public class Individual {
 	private Operation representation;
 	private double fitness;
-	private int descendants; // for debugging!
 
 	public Individual(Operation representation) {
 		this.representation = representation;
 	}
 
 	public Operation getRepresentation() {
-		return representation;
+		return this.representation;
 	}
 
 	public double getFitness() {
@@ -21,18 +20,6 @@ public class Individual {
 
 	public void setFitness(double newFit) {
 		this.fitness = newFit;
-	}
-
-	/**
-	 * Should be called by the genetic algorithm whenever the individual is selected
-	 * to produce a descendant.
-	 */
-	public void incDescendants() {
-		descendants++;
-	}
-
-	public int getDescendants() {
-		return descendants;
 	}
 
 	@Override
