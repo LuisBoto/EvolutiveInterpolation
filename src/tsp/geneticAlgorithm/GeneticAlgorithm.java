@@ -7,6 +7,15 @@ import java.util.List;
 import java.util.Random;
 
 import tsp.lib.Util;
+import tsp.lib.arithmetic.Addition;
+import tsp.lib.arithmetic.Cos;
+import tsp.lib.arithmetic.Division;
+import tsp.lib.arithmetic.Multiplication;
+import tsp.lib.arithmetic.Operation;
+import tsp.lib.arithmetic.Power;
+import tsp.lib.arithmetic.Sin;
+import tsp.lib.arithmetic.Subtraction;
+import tsp.lib.arithmetic.Tan;
 import tsp.metricFramework.Algorithm;
 
 public class GeneticAlgorithm<A> extends Algorithm<A> {
@@ -166,38 +175,38 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 	}
 
 	protected Individual<A> reproduce(Individual<A> x, Individual<A> y) {
-		// OX type cross operator
-		int workingIndividualLength = individualLength - 1;
-
-		List<A> childRepresentation = new ArrayList<A>(x.getRepresentation());
-		int p1 = randomOffset(workingIndividualLength);
-		int p2 = randomOffset(workingIndividualLength);
-		List<A> inheritedFromFirstParent = new ArrayList<A>();
-
-		// Inheriting from first parent
-		int i = p1;
-		while (i != p2) {
-			inheritedFromFirstParent.add(x.getRepresentation().get(i));
-			i++;
-			if (i == workingIndividualLength)
-				i = 0;
+		// Random type of operation
+		int type = random.nextInt(8); // 8 kinds of basic operation
+		Operation childOperation = null;
+		switch (type) {
+		case 0: // Addition
+			childOperation = new Addition(x.getRepresentation(), y.getRepresentation());
+			break;
+		case 1: // Subtraction
+			childOperation = new Subtraction(x.getRepresentation(), y.getRepresentation());
+			break;
+		case 2: // Multiplication
+			childOperation = new Multiplication(x.getRepresentation(), y.getRepresentation());
+			break;
+		case 3: // Division
+			childOperation = new Division(x.getRepresentation(), y.getRepresentation());
+			break;
+		case 4: // Power
+			childOperation = new Power(x.getRepresentation(), y.getRepresentation());
+			break;
+		// Single operator operations leave second parent out...
+		case 5: // Sin
+			childOperation = new Sin(x.getRepresentation());
+			break;
+		case 6: // Cos
+			childOperation = new Cos(x.getRepresentation());
+			break;
+		case 7: // Tan
+			childOperation = new Tan(x.getRepresentation());
+			break;
 		}
-
-		// Inheriting from second parent
-		int secondParentInheritsAt = p2;
-		for (i = 0; i < workingIndividualLength; i++) {
-			if (!inheritedFromFirstParent.contains(y.getRepresentation().get(i))) {
-				childRepresentation.set(secondParentInheritsAt, y.getRepresentation().get(i));
-				secondParentInheritsAt++;
-				if (secondParentInheritsAt == workingIndividualLength)
-					secondParentInheritsAt = 0;
-			}
-		}
-
-		// Last city must be initial one
-		childRepresentation.set(individualLength - 1, childRepresentation.get(0));
 		metrics.incrementIntValue("crossovers");
-		return new Individual<A>(childRepresentation);
+		return new Individual<A>(childOperation);
 	}
 
 	protected double averageFitness(List<Individual<A>> population) {
@@ -209,18 +218,20 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 	}
 
 	protected Individual<A> mutate(Individual<A> child) {
-		// Select two random cities that are not the initial one and exchange them
-		List<A> mutatedRepresentation = new ArrayList<A>(child.getRepresentation());
-		int mutateOffsetPos1 = randomOffset(individualLength - 1);
-		int mutateOffsetPos2 = randomOffset(individualLength - 1);
-		A mutateOffsetValue1 = mutatedRepresentation.get(mutateOffsetPos1);
-		A mutateOffsetValue2 = mutatedRepresentation.get(mutateOffsetPos2);
+		// 50% to add new operation to existing equation
+		// 50% to remove last operator
+		// Independent coin toss to change numeric value and/or equation variables
+		Operation mutatedRepresentation;
+		if (random.nextBoolean()) { // Add operation
+			mutatedRepresentation = GeneticFunctions.getRandomOperation();
+			mutatedRepresentation.setFirstOperator(child.getRepresentation());
+		} else { // Remove last operation
+			mutatedRepresentation = child.getRepresentation().getFirstOperator();
+		}
 
-		mutatedRepresentation.set(mutateOffsetPos1, mutateOffsetValue2);
-		mutatedRepresentation.set(mutateOffsetPos2, mutateOffsetValue1);
+		if (random.nextBoolean())
+			mutatedRepresentation.mutateNumericValuesVariables();
 
-		// Last city must be initial one
-		mutatedRepresentation.set(individualLength - 1, mutatedRepresentation.get(0));
 		metrics.incrementIntValue("mutations");
 		return new Individual<A>(mutatedRepresentation);
 	}
@@ -239,7 +250,7 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected String getExecutionFilename() {
-		return "GATSP___" + reproduceOperator + "_" + mutateOperator + "_" + getPopulationSize() + "_"
+		return "GAInterpolation_" + getPopulationSize() + "_"
 				+ crossoverProbability + "_" + mutationProbability + "_" + maxTime + "_GMT_"
 				+ new Date().toGMTString().replace(':', '_').replace(" ", "_") + random.nextInt(10000) + ".csv";
 	}
