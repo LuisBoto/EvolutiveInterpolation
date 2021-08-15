@@ -2,8 +2,8 @@ package tsp.lib.arithmetic;
 
 public class Variable extends Operation {
 	
-	public Variable(Operation firstOperator) {
-		super(firstOperator, null);
+	public Variable() {
+		super(null, null);
 	}
 
 	@Override

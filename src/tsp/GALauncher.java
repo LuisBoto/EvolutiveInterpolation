@@ -9,15 +9,16 @@ import javax.script.ScriptException;
 import tsp.geneticAlgorithm.FitnessFunction;
 import tsp.geneticAlgorithm.GeneticAlgorithm;
 import tsp.geneticAlgorithm.Individual;
-import tsp.geneticAlgorithm.TSPFunctions;
-import tsp.geneticAlgorithm.TSPFunctions.TSPFitnessFunction;
+import tsp.geneticAlgorithm.GeneticFunctions;
+import tsp.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunction;
+import tsp.geneticAlgorithm.GeneticFunctions.TSPFitnessFunction;
 import tsp.lib.Graph;
 import tsp.lib.TSPParser;
 
-public class TSPLauncher {
+public class GALauncher {
 
 	public static void main(String[] args) throws ScriptException {
-		String instanceURL = args[0];
+		double[] pointList = args[0];
 		int reproduce = Integer.parseInt(args[1]);
 		int mutate = Integer.parseInt(args[2]);
 		int popSize = Integer.parseInt(args[3]);
@@ -28,7 +29,7 @@ public class TSPLauncher {
 		// City graph construction
 		Graph<String> cities = TSPParser.parseInstance(instanceURL);
 
-		/*Graph<String> cities = TSPParser.parseInstance("./resources/tspInstances/d1655.tsp");
+		/*double[] pointList = { 0.0, 1.0, 2.0, 3.0, 4.0};
 		int popSize = 100; 
 		double crossoverProbability = 0.8; 
 		double
@@ -37,22 +38,22 @@ public class TSPLauncher {
 		int reproduce = 1;
 		int mutate = 1;*/
 		 
-		tspAIModernGeneticAlgorithm(cities, popSize, crossoverProbability, mutationProbability, maxTime, reproduce,
+		callGeneticAlgorithm(pointList, popSize, crossoverProbability, mutationProbability, maxTime, reproduce,
 				mutate);
 	}
 
-	private static void tspAIModernGeneticAlgorithm(Graph<String> cities, int populationSize,
+	private static void callGeneticAlgorithm(double[] pointList, int populationSize,
 			double crossoverProbability, double mutationProbability, int max, int reproduceOperator,
 			int mutationOperator) {
-		System.out.println("--- TSP AIModern GeneticAlgorithm ---");
-		FitnessFunction<String> fitnessFunction = TSPFunctions.getFitnessFunction();
-		((TSPFitnessFunction) fitnessFunction).setCities(cities);
+		
+		System.out.println("--- GeneticAlgorithm ---");
+		FitnessFunction<String> fitnessFunction = GeneticFunctions.getFitnessFunction();
+		((InterpolationFitnessFunction) fitnessFunction).setPointList(pointList);
 
 		// Generate an initial population
 		Set<Individual<String>> population = new HashSet<>();
-		List<String> cityList = cities.getNodes();
 		for (int i = 0; i < populationSize; i++)
-			population.add(TSPFunctions.generateRandomIndividual(cityList));
+			population.add(GeneticFunctions.generateRandomIndividual());
 
 		GeneticAlgorithm<String> ga = new GeneticAlgorithm<>(cities.getName(), cityList.size() + 1,
 				crossoverProbability, mutationProbability, max, reproduceOperator, mutationOperator);

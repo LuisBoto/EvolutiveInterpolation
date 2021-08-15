@@ -1,37 +1,31 @@
 package tsp.geneticAlgorithm;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import tsp.lib.arithmetic.Operation;
 
 public class Individual<A> {
-	private List<A> representation = new ArrayList<>();
+	private Operation representation;
 	private double fitness;
 	private int descendants; // for debugging!
 
-	public Individual(List<A> representation) {
-		this.representation = Collections.unmodifiableList(representation);
+	public Individual(Operation representation) {
+		this.representation = representation;
 	}
 
-	public List<A> getRepresentation() {
+	public Operation getRepresentation() {
 		return representation;
 	}
 
-	public int length() {
-		return representation.size();
-	}
-	
 	public double getFitness() {
 		return this.fitness;
 	}
-	
+
 	public void setFitness(double newFit) {
 		this.fitness = newFit;
 	}
 
 	/**
-	 * Should be called by the genetic algorithm whenever the individual is
-	 * selected to produce a descendant.
+	 * Should be called by the genetic algorithm whenever the individual is selected
+	 * to produce a descendant.
 	 */
 	public void incDescendants() {
 		descendants++;
