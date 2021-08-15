@@ -126,7 +126,7 @@ public abstract class Algorithm<A> {
 		// return metrics.getLong(TIME_IN_MILLISECONDS);
 	}
 
-	protected void updateMetrics(Collection<Individual<A>> population, int itCount) {
+	protected void updateMetrics(Collection<Individual> population, int itCount) {
 		metrics.setValue(POPULATION_SIZE, population.size());
 		metrics.setValue(ITERATIONS, itCount);
 		metrics.setValue(TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());

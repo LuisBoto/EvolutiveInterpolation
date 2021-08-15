@@ -6,18 +6,17 @@ import tsp.lib.arithmetic.Addition;
 import tsp.lib.arithmetic.Cos;
 import tsp.lib.arithmetic.Division;
 import tsp.lib.arithmetic.Multiplication;
-import tsp.lib.arithmetic.NumericValue;
+import tsp.lib.arithmetic.NumericValueVariable;
 import tsp.lib.arithmetic.Operation;
 import tsp.lib.arithmetic.Power;
 import tsp.lib.arithmetic.Sin;
 import tsp.lib.arithmetic.Subtraction;
 import tsp.lib.arithmetic.Tan;
-import tsp.lib.arithmetic.Variable;
 
 public class GeneticFunctions {
 
-	public static Individual<String> generateRandomIndividual() {
-		return new Individual<>(getRandomOperation());
+	public static Individual generateRandomIndividual() {
+		return new Individual(getRandomOperation());
 	}
 
 	public static Operation getRandomOperation() {
@@ -59,11 +58,9 @@ public class GeneticFunctions {
 	public static Operation getRandomVariableNumericValue() {
 		// Random variable or numeric value
 		Random rand = new Random();
-		if (rand.nextBoolean()) // Variable
-			return new Variable();
 		if (rand.nextBoolean())
-			return new NumericValue(rand.nextDouble() * 1000.0);
-		return new NumericValue(rand.nextInt(1000));
+			return new NumericValueVariable(rand.nextDouble() * 1000.0, rand.nextBoolean());
+		return new NumericValueVariable(rand.nextInt(1000), rand.nextBoolean());
 	}
 
 	public static InterpolationFitnessFunction getFitnessFunction() {
@@ -78,7 +75,7 @@ public class GeneticFunctions {
 			this.pointList = points;
 		}
 
-		public double apply(Individual<String> individual) {
+		public double apply(Individual individual) {
 			double fitness = 0;
 			int size = pointList.length;
 
@@ -86,7 +83,7 @@ public class GeneticFunctions {
 				fitness += Math.abs(pointList[i] - individual.getRepresentation().computeValue(i));
 			}
 
-			return fitness; // Less fitness value is better
+			return fitness*individual.getRepresentation().getLength(); // Less fitness value is better
 		}
 	}
 

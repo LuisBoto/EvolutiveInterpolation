@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 import tsp.lib.Util;
-import tsp.lib.arithmetic.NumericValue;
+import tsp.lib.arithmetic.NumericValueVariable;
 import tsp.lib.arithmetic.Operation;
-import tsp.lib.arithmetic.Variable;
 import tsp.metricFramework.Algorithm;
 
 public class GeneticAlgorithm<A> extends Algorithm<A> {
@@ -58,14 +57,14 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return getIterations() % 10 == 0;
 	}
 
-	public Individual<A> geneticAlgorithm(Collection<Individual<A>> initPopulation, FitnessFunction<A> fitnessFn) {
+	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction<A> fitnessFn) {
 		// Initial values
 		metrics.setValue("mutations", 0);
 		metrics.setValue("crossovers", 0);
-		Individual<A> bestIndividual = null;
+		Individual bestIndividual = null;
 
 		// Create a local copy of the population to work with
-		List<Individual<A>> population = new ArrayList<>(initPopulation);
+		List<Individual> population = new ArrayList<>(initPopulation);
 		validatePopulation(population);
 
 		updateMetrics(population, 0);
@@ -94,17 +93,17 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return bestIndividual;
 	}
 
-	private void printStatus(Individual<A> bestIndividual) {
+	private void printStatus(Individual bestIndividual) {
 		// Monitor average and best fitness, time, iteration etc.
 		System.out.println("\nTime: " + getTimeInMilliseconds() + " Gen: " + getIterations() + " Best f: "
 				+ metrics.getValue("bestFitness") + " Best individual: " + bestIndividual.toString());
 	}
 
-	public Individual<A> retrieveBestIndividual(Collection<Individual<A>> population) {
-		Individual<A> bestIndividual = null;
+	public Individual retrieveBestIndividual(Collection<Individual> population) {
+		Individual bestIndividual = null;
 		double bestSoFarFValue = Double.MAX_VALUE;
 
-		for (Individual<A> individual : population) {
+		for (Individual individual : population) {
 			double fValue = individual.getFitness();
 			if (fValue < bestSoFarFValue) {
 				bestIndividual = individual;
@@ -115,17 +114,17 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return bestIndividual;
 	}
 
-	protected void calculateFitness(Collection<Individual<A>> population, FitnessFunction<A> fitnessFn) {
-		for (Individual<A> individual : population)
+	protected void calculateFitness(Collection<Individual> population, FitnessFunction<A> fitnessFn) {
+		for (Individual individual : population)
 			individual.setFitness(fitnessFn.apply(individual));
 	}
 
-	protected List<Individual<A>> nextGeneration(List<Individual<A>> population, Individual<A> bestBefore) {
-		List<Individual<A>> newPopulation = new ArrayList<>(population.size());
+	protected List<Individual> nextGeneration(List<Individual> population, Individual bestBefore) {
+		List<Individual> newPopulation = new ArrayList<>(population.size());
 		for (int i = 0; i < population.size() - 1; i++) { // -1 for elitism
-			Individual<A> x = randomSelection(population);
-			Individual<A> y = randomSelection(population);
-			Individual<A> child = x;
+			Individual x = randomSelection(population);
+			Individual y = randomSelection(population);
+			Individual child = x;
 			if (random.nextDouble() <= crossoverProbability)
 				child = this.reproduce(x, y);
 
@@ -138,9 +137,9 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return newPopulation;
 	}
 
-	protected Individual<A> randomSelection(List<Individual<A>> population) {
+	protected Individual randomSelection(List<Individual> population) {
 		// Default result is last individual to avoid problems with rounding errors
-		Individual<A> selected = population.get(population.size() - 1);
+		Individual selected = population.get(population.size() - 1);
 
 		// Determine all of the fitness values
 		double[] fValues = new double[population.size()];
@@ -171,15 +170,15 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return selected;
 	}
 
-	protected Individual<A> reproduce(Individual<A> x, Individual<A> y) {
+	protected Individual reproduce(Individual x, Individual y) {
 		Operation child = GeneticFunctions.getRandomOperation();
 		child.setFirstOperator(x.getRepresentation());
 		child.setSecondOperator(y.getRepresentation());
 		metrics.incrementIntValue("crossovers");
-		return new Individual<A>(child);
+		return new Individual(child);
 	}
 
-	protected double averageFitness(List<Individual<A>> population) {
+	protected double averageFitness(List<Individual> population) {
 		double totalFitness = 0.0;
 		for (int i = 0; i < population.size(); i++) {
 			totalFitness += population.get(i).getFitness();
@@ -187,12 +186,12 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 		return totalFitness / population.size();
 	}
 
-	protected Individual<A> mutate(Individual<A> child) {
+	protected Individual mutate(Individual child) {
 		// 30% to change one existing operator type
 		// 30% to remove last half of the equation
 		// 30% to change numeric value and/or equation variables
 		Operation mutatedRepresentation = child.getRepresentation();
-		int mutationType = random.nextInt(2);
+		int mutationType = random.nextInt(3);
 		if (mutationType == 0) { // Remove last operation if possible
 			if (child.getRepresentation().getLength() > 1)
 				mutatedRepresentation = child.getRepresentation().getFirstOperator();
@@ -206,38 +205,37 @@ public class GeneticAlgorithm<A> extends Algorithm<A> {
 			mutatedRepresentation = newOperator;
 		}
 		if (mutationType == 2) { // Change numeric/variable
-			mutatedRepresentation = mutateNumericValuesVariables(child.getRepresentation());
+			mutateNumericValuesVariables(mutatedRepresentation);
 		}
 
 		metrics.incrementIntValue("mutations");
-		return new Individual<A>(mutatedRepresentation);
+		return new Individual(mutatedRepresentation);
 	}
 	
-	private Operation mutateNumericValuesVariables(Operation representation) {
+	private void mutateNumericValuesVariables(Operation representation) {
 		if (representation.getFirstOperator() != null) {
-			if (representation.getFirstOperator() instanceof NumericValue || representation.getFirstOperator() instanceof Variable) {
+			if (representation.getFirstOperator() instanceof NumericValueVariable) {
 				// Change numeric value or turn into a variable
-				representation.setFirstOperator(GeneticFunctions.getRandomVariableNumericValue());
+				((NumericValueVariable) representation.getFirstOperator()).mutate();
 			} else {
 				mutateNumericValuesVariables(representation.getFirstOperator());
 			}
 		}
 		if (representation.getSecondOperator() != null) {
-			if (representation.getSecondOperator() instanceof NumericValue || representation.getSecondOperator() instanceof Variable) {
+			if (representation.getSecondOperator() instanceof NumericValueVariable) {
 				// Change numeric value or turn into a variable
-				representation.setSecondOperator(GeneticFunctions.getRandomVariableNumericValue());
+				((NumericValueVariable) representation.getSecondOperator()).mutate();
 			} else {
 				mutateNumericValuesVariables(representation.getSecondOperator());
 			}
 		}
-		return representation;
 	}
 
 	protected int randomOffset(int length) {
 		return random.nextInt(length);
 	}
 
-	protected void validatePopulation(Collection<Individual<A>> population) {
+	protected void validatePopulation(Collection<Individual> population) {
 		if (population.size() < 1) {
 			throw new IllegalArgumentException("Must start with at least a population of size 1");
 		}

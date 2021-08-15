@@ -2,7 +2,7 @@ package tsp.geneticAlgorithm;
 
 import tsp.lib.arithmetic.Operation;
 
-public class Individual<A> {
+public class Individual {
 	private Operation representation;
 	private double fitness;
 	private int descendants; // for debugging!

@@ -1,8 +1,7 @@
 package tsp;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.script.ScriptException;
 
 import tsp.geneticAlgorithm.FitnessFunction;
@@ -30,7 +29,7 @@ public class GALauncher {
 		int maxTime = Integer.parseInt(args[6]) * 1000;*/
 
 		
-		double[] pointList = { 0, 3/2, 3, 4.5, 6, 15/2, 9, 21/2}; 
+		double[] pointList = { 1, 2, 4, 8, 16, 32, 64, 128}; 
 		int popSize = 100; 
 		double crossoverProbability = 0.3;
 		double mutationProbability = 0.9;
@@ -46,13 +45,13 @@ public class GALauncher {
 		((InterpolationFitnessFunction) fitnessFunction).setPointList(pointList);
 
 		// Generate an initial population
-		Set<Individual<String>> population = new HashSet<>();
+		Collection<Individual> population = new ArrayList<Individual>();
 		for (int i = 0; i < populationSize; i++)
 			population.add(GeneticFunctions.generateRandomIndividual());
 
 		GeneticAlgorithm<String> ga = new GeneticAlgorithm<>(crossoverProbability, mutationProbability, maxTime);
 		System.out.println("Starting evolution");
-		Individual<String> bestIndividual = ga.geneticAlgorithm(population, fitnessFunction);
+		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction);
 
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
 		System.out.println("Fitness = " + fitnessFunction.apply(bestIndividual));
