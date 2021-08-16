@@ -157,7 +157,7 @@ public class GeneticAlgorithm extends Algorithm {
 		double prob = random.nextDouble();
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
-			totalSoFar += 1-fValues[i];
+			totalSoFar += 1 - fValues[i];
 			if (prob <= totalSoFar) {
 				selected = population.get(i);
 				break;
@@ -168,9 +168,21 @@ public class GeneticAlgorithm extends Algorithm {
 	}
 
 	protected Individual reproduce(Individual x, Individual y) {
-		Operation child = GeneticFunctions.getRandomOperation();
-		child.setFirstOperator(x.getRepresentation());
-		child.setSecondOperator(y.getRepresentation());
+		// 3/4 to fuse a half from each
+		// 1/4 to combine both into a longer equation
+		Random r = new Random();
+		int type = r.nextInt(4);
+		Operation child;
+		if (type == 3) {
+			child = GeneticFunctions.getRandomOperation();
+			child.setFirstOperator(x.getRepresentation());
+			child.setSecondOperator(y.getRepresentation());
+		} else {
+			child = x.getRepresentation();
+			Operation second = y.getRepresentation();
+			if (second.getFirstOperator()!=null)
+				child.setFirstOperator(second.getFirstOperator());
+		}
 		metrics.incrementIntValue("crossovers");
 		return new Individual(child);
 	}
@@ -190,8 +202,8 @@ public class GeneticAlgorithm extends Algorithm {
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(3);
 		if (mutationType == 0) { // Remove last operation if possible
-			if (child.getRepresentation().getLength() > 1)
-				mutatedRepresentation = child.getRepresentation().getFirstOperator();
+			if (mutatedRepresentation.getLength() > 1) 
+				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
 		}
 		if (mutationType == 1) { // Change operator
 			Operation newOperator = GeneticFunctions.getRandomOperation();
@@ -202,7 +214,7 @@ public class GeneticAlgorithm extends Algorithm {
 			mutatedRepresentation = newOperator;
 		}
 		if (mutationType == 2) { // Change numeric/variable
-			mutatedRepresentation = mutateNumericValuesVariables(child.getRepresentation());
+			mutatedRepresentation = mutateNumericValuesVariables(mutatedRepresentation);
 		}
 
 		metrics.incrementIntValue("mutations");

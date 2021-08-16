@@ -13,14 +13,14 @@ public class NumericValueVariable extends Operation {
 		this.value = value;
 		this.isVariable = isVariable;
 	}
-	
+
 	public NumericValueVariable(boolean isVariable) {
 		super(null, null); // No operands just a single value
 		Random rand = new Random();
 		if (rand.nextBoolean())
-			this.value = rand.nextDouble()*10;
+			this.value = rand.nextDouble() * 10 + 1;
 		else
-			this.value = rand.nextInt(10);
+			this.value = rand.nextInt(10) + 1;
 		this.isVariable = isVariable;
 	}
 
