@@ -45,7 +45,7 @@ public class GeneticAlgorithm extends Algorithm {
 	@Override
 	protected boolean stopCondition() {
 		// return getTimeInMilliseconds() > this.maxTime;
-		return getIterations() >= maxTime || metrics.getValue("bestFitness").equals("0.0");
+		return metrics.getValue("bestFitness").equals("0.0");// || getIterations() >= maxTime;
 	}
 
 	@Override
@@ -77,7 +77,6 @@ public class GeneticAlgorithm extends Algorithm {
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			metrics.setValue(Algorithm.ITERATIONS, itCount);
 			metrics.setValue("bestFitness", bestIndividual.getFitness());
-			printStatus(bestIndividual);
 			metricsDumpCheck();
 
 			population = nextGeneration(population, bestIndividual);
@@ -85,6 +84,7 @@ public class GeneticAlgorithm extends Algorithm {
 			this.calculateFitness(population, fitnessFn);
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			bestIndividual = retrieveBestIndividual(population);
+			printStatus(bestIndividual);
 		} while (!this.stopCondition());
 
 		metricsDumpCheck();
@@ -196,11 +196,12 @@ public class GeneticAlgorithm extends Algorithm {
 	}
 
 	protected Individual mutate(Individual child) {
-		// 1/3 to change one existing operator type
-		// 1/3 to remove last half of the equation
-		// 1/3 to change numeric value and/or equation variables
+		// 1/4 to change one existing operator type
+		// 1/4 to remove last half of the equation
+		// 1/4 to change numeric value and/or equation variables
+		// 1/4 to add new operator
 		Operation mutatedRepresentation = child.getRepresentation();
-		int mutationType = random.nextInt(3);
+		int mutationType = random.nextInt(5);
 		if (mutationType == 0) { // Remove last operation if possible
 			if (mutatedRepresentation.getLength() > 1) 
 				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
@@ -215,6 +216,14 @@ public class GeneticAlgorithm extends Algorithm {
 		}
 		if (mutationType == 2) { // Change numeric/variable
 			mutatedRepresentation = mutateNumericValuesVariables(mutatedRepresentation);
+		}
+		if (mutationType == 3) { // Add operator
+			Operation newOperator = GeneticFunctions.getRandomOperation();
+			newOperator.setFirstOperator(mutatedRepresentation);
+			mutatedRepresentation = newOperator;
+		}
+		if (mutationType == 4) { // New function
+			mutatedRepresentation = GeneticFunctions.getRandomOperation();
 		}
 
 		metrics.incrementIntValue("mutations");

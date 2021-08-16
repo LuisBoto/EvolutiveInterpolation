@@ -58,11 +58,11 @@ public class GeneticFunctions {
 	public static Operation getRandomVariableNumericValue() {
 		// Random variable or numeric value
 		Random rand = new Random();
-		return new NumericValueVariable(rand.nextInt(10) < 8); //80% are variables
+		return new NumericValueVariable(rand.nextInt(10) < 8); // 80% are variables
 	}
-	
+
 	public static Operation cloneRepresentationRecursive(Operation present) {
-		String className = present.getClass().getSimpleName(); 
+		String className = present.getClass().getSimpleName();
 		switch (className) {
 		case "Addition":
 			return new Addition(cloneRepresentationRecursive(present.getFirstOperator()),
@@ -113,7 +113,10 @@ public class GeneticFunctions {
 				fitness += Math.abs(pointList[i] - individual.getRepresentation().computeValue(i));
 			}
 
-			return fitness*individual.getRepresentation().getLength(); // Less fitness value is better
+			int length = individual.getRepresentation().getLength();
+			if (fitness == 0)
+				length = 0;
+			return fitness + length; // Less fitness value is better
 		}
 	}
 

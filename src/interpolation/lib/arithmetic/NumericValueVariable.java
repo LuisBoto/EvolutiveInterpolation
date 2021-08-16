@@ -64,9 +64,9 @@ public class NumericValueVariable extends Operation {
 		Random r = new Random();
 		isVariable = r.nextBoolean();
 		if (r.nextBoolean())
-			value = r.nextDouble() * 1000.0;
+			value = r.nextDouble() * 10.0 + 1;
 		else
-			value = r.nextInt(1000);
+			value = r.nextInt(10) + 1;
 	}
 
 }
