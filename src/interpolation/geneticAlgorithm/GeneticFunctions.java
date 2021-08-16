@@ -99,18 +99,22 @@ public class GeneticFunctions {
 
 	public static class InterpolationFitnessFunction implements FitnessFunction {
 
-		private double[] pointList;
+		private double[] pointListX;
+		private double[] pointListY;
 
-		public void setPointList(double[] points) {
-			this.pointList = points;
+		public void setPointList(double[] pointsX, double[] pointsY) {
+			this.pointListX = pointsX;
+			this.pointListY = pointsY;
 		}
 
 		public double apply(Individual individual) {
 			double fitness = 0;
-			int size = pointList.length;
+			int size = pointListX.length;
 
+			double coordinate;
 			for (int i = 0; i < size; i++) {
-				fitness += Math.abs(pointList[i] - individual.getRepresentation().computeValue(i));
+				coordinate = pointListX[i];
+				fitness += Math.abs(pointListY[i] - individual.getRepresentation().computeValue(coordinate));
 			}
 
 			int length = individual.getRepresentation().getLength();

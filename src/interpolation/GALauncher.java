@@ -13,36 +13,34 @@ import interpolation.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunct
 public class GALauncher {
 
 	public static void main(String[] args) throws ScriptException {
-		/*String points = args[0];
-		double[] pointList = new double[points.split(",").length];
-		int i = 0;
-		for (String val : points.split("[")[1].split("]")[0].split(",")) {
-			pointList[i] = Double.parseDouble(val);
-			i++;
-		}
-		
-		int reproduce = Integer.parseInt(args[1]);
-		int mutate = Integer.parseInt(args[2]);
-		int popSize = Integer.parseInt(args[3]);
-		double crossoverProbability = Double.parseDouble(args[4]);
-		double mutationProbability = Double.parseDouble(args[5]);
-		int maxTime = Integer.parseInt(args[6]) * 1000;*/
+		/*
+		 * String points = args[0]; double[] pointList = new
+		 * double[points.split(",").length]; int i = 0; for (String val :
+		 * points.split("[")[1].split("]")[0].split(",")) { pointList[i] =
+		 * Double.parseDouble(val); i++; }
+		 * 
+		 * int reproduce = Integer.parseInt(args[1]); int mutate =
+		 * Integer.parseInt(args[2]); int popSize = Integer.parseInt(args[3]); double
+		 * crossoverProbability = Double.parseDouble(args[4]); double
+		 * mutationProbability = Double.parseDouble(args[5]); int maxTime =
+		 * Integer.parseInt(args[6]) * 1000;
+		 */
 
-		
-		double[] pointList = { 90, 40, 231, 147, 159, 201, 16}; 
-		int popSize = 1000; 
+		double[] pointListX = { 1, 1.41, 2, 2.4, 3 };
+		double[] pointListY = { 0.841, 0.476, 0.523, 0.813, -0.35 };
+		int popSize = 1000;
 		double crossoverProbability = 0.9;
-		double mutationProbability = 1;
-		int maxTime = 5000; // 5000 iterations 
-		callGeneticAlgorithm(pointList, popSize, crossoverProbability, mutationProbability, maxTime);
+		double mutationProbability = 0.8;
+		int maxTime = 5000; // 5000 iterations
+		callGeneticAlgorithm(pointListX, pointListY, popSize, crossoverProbability, mutationProbability, maxTime);
 	}
 
-	private static void callGeneticAlgorithm(double[] pointList, int populationSize, double crossoverProbability,
-			double mutationProbability, int maxTime) {
+	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, int populationSize,
+			double crossoverProbability, double mutationProbability, int maxTime) {
 
 		System.out.println("--- GeneticAlgorithm ---");
 		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction();
-		((InterpolationFitnessFunction) fitnessFunction).setPointList(pointList);
+		((InterpolationFitnessFunction) fitnessFunction).setPointList(pointListX, pointListY);
 
 		// Generate an initial population
 		Collection<Individual> population = new ArrayList<Individual>();
