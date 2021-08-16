@@ -1,4 +1,4 @@
-package tsp.geneticAlgorithm;
+package interpolation.geneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import tsp.lib.Util;
-import tsp.lib.arithmetic.NumericValueVariable;
-import tsp.lib.arithmetic.Operation;
-import tsp.metricFramework.Algorithm;
+import interpolation.lib.Util;
+import interpolation.lib.arithmetic.NumericValueVariable;
+import interpolation.lib.arithmetic.Operation;
+import interpolation.metricFramework.Algorithm;
 
 public class GeneticAlgorithm extends Algorithm {
 

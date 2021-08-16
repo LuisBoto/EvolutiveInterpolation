@@ -1,17 +1,17 @@
-package tsp.geneticAlgorithm;
+package interpolation.geneticAlgorithm;
 
 import java.util.Random;
 
-import tsp.lib.arithmetic.Addition;
-import tsp.lib.arithmetic.Cos;
-import tsp.lib.arithmetic.Division;
-import tsp.lib.arithmetic.Multiplication;
-import tsp.lib.arithmetic.NumericValueVariable;
-import tsp.lib.arithmetic.Operation;
-import tsp.lib.arithmetic.Power;
-import tsp.lib.arithmetic.Sin;
-import tsp.lib.arithmetic.Subtraction;
-import tsp.lib.arithmetic.Tan;
+import interpolation.lib.arithmetic.Addition;
+import interpolation.lib.arithmetic.Cos;
+import interpolation.lib.arithmetic.Division;
+import interpolation.lib.arithmetic.Multiplication;
+import interpolation.lib.arithmetic.NumericValueVariable;
+import interpolation.lib.arithmetic.Operation;
+import interpolation.lib.arithmetic.Power;
+import interpolation.lib.arithmetic.Sin;
+import interpolation.lib.arithmetic.Subtraction;
+import interpolation.lib.arithmetic.Tan;
 
 public class GeneticFunctions {
 

@@ -1,4 +1,4 @@
-package tsp.metricFramework;
+package interpolation.metricFramework;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import tsp.geneticAlgorithm.Individual;
+import interpolation.geneticAlgorithm.Individual;
 
 public abstract class Algorithm {
 

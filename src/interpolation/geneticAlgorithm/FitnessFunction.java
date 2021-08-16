@@ -1,4 +1,4 @@
-package tsp.geneticAlgorithm;
+package interpolation.geneticAlgorithm;
 
 public interface FitnessFunction {
 

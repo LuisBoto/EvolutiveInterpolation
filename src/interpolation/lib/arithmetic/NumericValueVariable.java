@@ -1,4 +1,4 @@
-package tsp.lib.arithmetic;
+package interpolation.lib.arithmetic;
 
 import java.text.DecimalFormat;
 import java.util.Random;

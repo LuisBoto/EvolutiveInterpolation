@@ -1,4 +1,4 @@
-package tsp.lib.arithmetic;
+package interpolation.lib.arithmetic;
 
 public class Sin extends Operation {
 

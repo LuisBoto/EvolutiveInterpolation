@@ -1,14 +1,14 @@
-package tsp;
+package interpolation;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.script.ScriptException;
 
-import tsp.geneticAlgorithm.FitnessFunction;
-import tsp.geneticAlgorithm.GeneticAlgorithm;
-import tsp.geneticAlgorithm.Individual;
-import tsp.geneticAlgorithm.GeneticFunctions;
-import tsp.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunction;
+import interpolation.geneticAlgorithm.FitnessFunction;
+import interpolation.geneticAlgorithm.GeneticAlgorithm;
+import interpolation.geneticAlgorithm.GeneticFunctions;
+import interpolation.geneticAlgorithm.Individual;
+import interpolation.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunction;
 
 public class GALauncher {
 

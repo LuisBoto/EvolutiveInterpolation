@@ -1,6 +1,6 @@
-package tsp.geneticAlgorithm;
+package interpolation.geneticAlgorithm;
 
-import tsp.lib.arithmetic.Operation;
+import interpolation.lib.arithmetic.Operation;
 
 public class Individual {
 	private Operation representation;

@@ -1,4 +1,4 @@
-package tsp.metricFramework;
+package interpolation.metricFramework;
 
 import java.util.ArrayList;
 import java.util.HashMap;

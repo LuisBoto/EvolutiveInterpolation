@@ -1,26 +1,26 @@
-package tsp.lib.arithmetic;
+package interpolation.lib.arithmetic;
 
-public class Cos extends Operation {
+public class Tan extends Operation {
 
-	public Cos(Operation firstOperator) {
+	public Tan(Operation firstOperator) {
 		super(firstOperator, null);
 	}
 
 	@Override
 	public double computeValue(double variableValue) {
-		return Math.cos(firstOperator.computeValue(variableValue));
+		return Math.tan(firstOperator.computeValue(variableValue));
 	}
 
 	@Override
 	public String toString() {
-		return "cos(" + firstOperator.toString() + ")";
+		return "tan(" + firstOperator.toString() + ")";
 	}
 
 	@Override
 	public int getLength() {
 		return this.getFirstOperator().getLength() + 1;
 	}
-
+	
 	@Override
 	public Operation getSecondOperator() {
 		return null;

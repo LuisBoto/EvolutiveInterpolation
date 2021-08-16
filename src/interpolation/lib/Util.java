@@ -1,4 +1,4 @@
-package tsp.lib;
+package interpolation.lib;
 
 import java.util.ArrayList;
 import java.util.List;
