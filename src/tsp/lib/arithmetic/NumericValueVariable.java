@@ -18,6 +18,14 @@ public class NumericValueVariable extends Operation {
 		this.value = newValue;
 	}
 
+	public double getValue() {
+		return this.value;
+	}
+
+	public boolean isVariable() {
+		return this.isVariable;
+	}
+
 	public void setVariable(boolean isVariable) {
 		this.isVariable = isVariable;
 	}
@@ -41,12 +49,12 @@ public class NumericValueVariable extends Operation {
 	public int getLength() {
 		return 1;
 	}
-	
+
 	public void mutate() {
 		Random r = new Random();
 		isVariable = r.nextBoolean();
 		if (r.nextBoolean())
-			value= r.nextDouble() * 1000.0;
+			value = r.nextDouble() * 1000.0;
 		else
 			value = r.nextInt(1000);
 	}
