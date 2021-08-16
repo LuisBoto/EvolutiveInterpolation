@@ -58,9 +58,7 @@ public class GeneticFunctions {
 	public static Operation getRandomVariableNumericValue() {
 		// Random variable or numeric value
 		Random rand = new Random();
-		if (rand.nextBoolean())
-			return new NumericValueVariable(rand.nextDouble() * 1000.0, rand.nextBoolean());
-		return new NumericValueVariable(rand.nextInt(1000), rand.nextBoolean());
+		return new NumericValueVariable(rand.nextInt(10) < 8); //80% are variables
 	}
 	
 	public static Operation cloneRepresentationRecursive(Operation present) {

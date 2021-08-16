@@ -38,7 +38,6 @@ public class GeneticAlgorithm extends Algorithm {
 		this.addProgressTracker(Algorithm.ITERATIONS);
 		this.addProgressTracker(Algorithm.TIME_IN_MILLISECONDS);
 		this.addProgressTracker("bestFitness");
-		this.addProgressTracker("averageFitness");
 		this.addProgressTracker("mutations");
 		this.addProgressTracker("crossovers");
 	}
@@ -78,7 +77,6 @@ public class GeneticAlgorithm extends Algorithm {
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			metrics.setValue(Algorithm.ITERATIONS, itCount);
 			metrics.setValue("bestFitness", bestIndividual.getFitness());
-			metrics.setValue("averageFitness", averageFitness(population));
 			printStatus(bestIndividual);
 			metricsDumpCheck();
 
@@ -94,7 +92,7 @@ public class GeneticAlgorithm extends Algorithm {
 	}
 
 	private void printStatus(Individual bestIndividual) {
-		// Monitor average and best fitness, time, iteration etc.
+		// Monitor fitness, time, iteration etc.
 		System.out.println("\nTime: " + getTimeInMilliseconds() + " Gen: " + getIterations() + " Best f: "
 				+ metrics.getValue("bestFitness") + " Best individual: " + bestIndividual.toString());
 	}
@@ -159,7 +157,7 @@ public class GeneticAlgorithm extends Algorithm {
 		double prob = random.nextDouble();
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
-			totalSoFar += fValues[i];
+			totalSoFar += 1-fValues[i];
 			if (prob <= totalSoFar) {
 				selected = population.get(i);
 				break;
