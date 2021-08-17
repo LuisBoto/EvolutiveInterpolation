@@ -1,5 +1,7 @@
 package interpolation.lib.arithmetic;
 
+import interpolation.geneticAlgorithm.GeneticFunctions;
+
 public class Sin extends Operation {
 
 	public Sin(Operation firstOperator) {
@@ -24,6 +26,13 @@ public class Sin extends Operation {
 	@Override
 	public Operation getSecondOperator() {
 		return null;
+	}
+	
+	@Override
+	public Operation mutateOperator() {
+		Operation mutated = GeneticFunctions.getRandomOperation();
+		mutated.setFirstOperator(this.getFirstOperator());
+		return mutated;
 	}
 
 }

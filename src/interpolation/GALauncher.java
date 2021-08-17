@@ -2,13 +2,14 @@ package interpolation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import javax.script.ScriptException;
 
 import interpolation.geneticAlgorithm.FitnessFunction;
 import interpolation.geneticAlgorithm.GeneticAlgorithm;
 import interpolation.geneticAlgorithm.GeneticFunctions;
-import interpolation.geneticAlgorithm.Individual;
 import interpolation.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunction;
+import interpolation.geneticAlgorithm.Individual;
 
 public class GALauncher {
 

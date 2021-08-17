@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 
 import interpolation.lib.Util;
-import interpolation.lib.arithmetic.NumericValueVariable;
 import interpolation.lib.arithmetic.Operation;
 import interpolation.metricFramework.Algorithm;
 
@@ -202,7 +201,12 @@ public class GeneticAlgorithm extends Algorithm {
 			if (mutatedRepresentation.getLength() > 1) 
 				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
 		}
-		if (mutationType == 1) { // Change Operation type
+		if (mutationType == 1) { // Add new oepration
+			Operation newOperator = GeneticFunctions.getRandomOperation();
+			newOperator.setFirstOperator(mutatedRepresentation);
+			mutatedRepresentation = newOperator;
+		}
+		if (mutationType == 2) { // Change this Operation type
 			Operation newOperator = GeneticFunctions.getRandomOperation();
 			if (mutatedRepresentation.getFirstOperator() != null)
 				newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
@@ -210,16 +214,11 @@ public class GeneticAlgorithm extends Algorithm {
 				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
 			mutatedRepresentation = newOperator;
 		}
-		if (mutationType == 2) { // Change numeric/variable values and kind
+		if (mutationType == 3) { // Change numeric/variable values and kind
 			mutatedRepresentation = GeneticFunctions.mutateNumericValuesVariables(mutatedRepresentation);
 		}
-		if (mutationType == 3) { // Add operator
-			Operation newOperator = GeneticFunctions.getRandomOperation();
-			newOperator.setFirstOperator(mutatedRepresentation);
-			mutatedRepresentation = newOperator;
-		}
 		if (mutationType == 4) { // Change operators
-			
+			mutatedRepresentation = GeneticFunctions.mutateOperators(mutatedRepresentation);
 		}
 
 		metrics.incrementIntValue("mutations");

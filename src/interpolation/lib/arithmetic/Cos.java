@@ -1,5 +1,7 @@
 package interpolation.lib.arithmetic;
 
+import interpolation.geneticAlgorithm.GeneticFunctions;
+
 public class Cos extends Operation {
 
 	public Cos(Operation firstOperator) {
@@ -24,5 +26,12 @@ public class Cos extends Operation {
 	@Override
 	public Operation getSecondOperator() {
 		return null;
+	}
+	
+	@Override
+	public Operation mutateOperator() {
+		Operation mutated = GeneticFunctions.getRandomOperation();
+		mutated.setFirstOperator(this.getFirstOperator());
+		return mutated;
 	}
 }

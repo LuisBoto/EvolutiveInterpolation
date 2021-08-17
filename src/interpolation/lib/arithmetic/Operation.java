@@ -1,5 +1,7 @@
 package interpolation.lib.arithmetic;
 
+import interpolation.geneticAlgorithm.GeneticFunctions;
+
 public abstract class Operation {
 
 	protected Operation firstOperator;
@@ -11,6 +13,15 @@ public abstract class Operation {
 	}
 
 	public abstract double computeValue(double variableValue);
+
+	public Operation mutateOperator() {
+		if (this instanceof NumericValueVariable)
+			return this;
+		Operation mutated = GeneticFunctions.getRandomOperation();
+		mutated.setFirstOperator(this.getFirstOperator());
+		mutated.setSecondOperator(this.getSecondOperator());
+		return mutated;
+	}
 
 	public abstract String toString();
 

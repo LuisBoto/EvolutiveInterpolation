@@ -14,6 +14,6 @@ public class Addition extends Operation {
 	@Override
 	public String toString() {
 		return firstOperator.toString() + " + " + secondOperator.toString();
-	}	
+	}
 
 }

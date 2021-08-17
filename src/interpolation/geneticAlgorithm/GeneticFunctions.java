@@ -112,6 +112,28 @@ public class GeneticFunctions {
 		}
 		return representation;
 	}
+	
+	public static Operation mutateOperators(Operation representation) {
+		if (representation.getFirstOperator() != null) {
+			if (representation.getFirstOperator() instanceof NumericValueVariable) {
+				// We're already on a mutable operation
+				return representation.mutateOperator();
+			} else {
+				// Explore deeper
+				representation.setFirstOperator(mutateOperators(representation.getFirstOperator()));
+			}
+		}
+		if (representation.getSecondOperator() != null) {
+			if (representation.getSecondOperator() instanceof NumericValueVariable) {
+				// We're already on a mutable operation
+				return representation.mutateOperator();
+			} else {
+				// Explore deeper if possible
+				representation.setSecondOperator(mutateOperators(representation.getSecondOperator()));
+			}
+		}
+		return representation;
+	}
 
 	public static InterpolationFitnessFunction getFitnessFunction() {
 		return new InterpolationFitnessFunction();
