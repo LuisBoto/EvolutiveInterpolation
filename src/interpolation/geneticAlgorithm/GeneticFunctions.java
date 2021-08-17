@@ -92,6 +92,26 @@ public class GeneticFunctions {
 			return null;
 		}
 	}
+	
+	public static Operation mutateNumericValuesVariables(Operation representation) {
+		if (representation.getFirstOperator() != null) {
+			if (representation.getFirstOperator() instanceof NumericValueVariable) {
+				// Change numeric value or turn into a variable
+				((NumericValueVariable) representation.getFirstOperator()).mutate();
+			} else {
+				mutateNumericValuesVariables(representation.getFirstOperator());
+			}
+		}
+		if (representation.getSecondOperator() != null) {
+			if (representation.getSecondOperator() instanceof NumericValueVariable) {
+				// Change numeric value or turn into a variable
+				((NumericValueVariable) representation.getSecondOperator()).mutate();
+			} else {
+				mutateNumericValuesVariables(representation.getSecondOperator());
+			}
+		}
+		return representation;
+	}
 
 	public static InterpolationFitnessFunction getFitnessFunction() {
 		return new InterpolationFitnessFunction();

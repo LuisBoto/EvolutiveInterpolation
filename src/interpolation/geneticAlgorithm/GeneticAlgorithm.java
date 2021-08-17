@@ -196,17 +196,13 @@ public class GeneticAlgorithm extends Algorithm {
 	}
 
 	protected Individual mutate(Individual child) {
-		// 1/4 to change one existing operator type
-		// 1/4 to remove last half of the equation
-		// 1/4 to change numeric value and/or equation variables
-		// 1/4 to add new operator
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(5);
 		if (mutationType == 0) { // Remove last operation if possible
 			if (mutatedRepresentation.getLength() > 1) 
 				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
 		}
-		if (mutationType == 1) { // Change operator
+		if (mutationType == 1) { // Change Operation type
 			Operation newOperator = GeneticFunctions.getRandomOperation();
 			if (mutatedRepresentation.getFirstOperator() != null)
 				newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
@@ -214,40 +210,20 @@ public class GeneticAlgorithm extends Algorithm {
 				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
 			mutatedRepresentation = newOperator;
 		}
-		if (mutationType == 2) { // Change numeric/variable
-			mutatedRepresentation = mutateNumericValuesVariables(mutatedRepresentation);
+		if (mutationType == 2) { // Change numeric/variable values and kind
+			mutatedRepresentation = GeneticFunctions.mutateNumericValuesVariables(mutatedRepresentation);
 		}
 		if (mutationType == 3) { // Add operator
 			Operation newOperator = GeneticFunctions.getRandomOperation();
 			newOperator.setFirstOperator(mutatedRepresentation);
 			mutatedRepresentation = newOperator;
 		}
-		if (mutationType == 4) { // New function
-			mutatedRepresentation = GeneticFunctions.getRandomOperation();
+		if (mutationType == 4) { // Change operators
+			
 		}
 
 		metrics.incrementIntValue("mutations");
 		return new Individual(mutatedRepresentation);
-	}
-
-	private Operation mutateNumericValuesVariables(Operation representation) {
-		if (representation.getFirstOperator() != null) {
-			if (representation.getFirstOperator() instanceof NumericValueVariable) {
-				// Change numeric value or turn into a variable
-				((NumericValueVariable) representation.getFirstOperator()).mutate();
-			} else {
-				mutateNumericValuesVariables(representation.getFirstOperator());
-			}
-		}
-		if (representation.getSecondOperator() != null) {
-			if (representation.getSecondOperator() instanceof NumericValueVariable) {
-				// Change numeric value or turn into a variable
-				((NumericValueVariable) representation.getSecondOperator()).mutate();
-			} else {
-				mutateNumericValuesVariables(representation.getSecondOperator());
-			}
-		}
-		return representation;
 	}
 
 	protected int randomOffset(int length) {
