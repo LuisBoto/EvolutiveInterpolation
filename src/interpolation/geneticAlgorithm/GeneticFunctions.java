@@ -5,6 +5,7 @@ import java.util.Random;
 import interpolation.lib.arithmetic.Addition;
 import interpolation.lib.arithmetic.Cos;
 import interpolation.lib.arithmetic.Division;
+import interpolation.lib.arithmetic.Log;
 import interpolation.lib.arithmetic.Multiplication;
 import interpolation.lib.arithmetic.NumericValueVariable;
 import interpolation.lib.arithmetic.Operation;
@@ -24,7 +25,7 @@ public class GeneticFunctions {
 		Operation operator1 = getRandomVariableNumericValue();
 		Operation operator2 = getRandomVariableNumericValue();
 		// Random type of operation
-		int type = rand.nextInt(8); // 8 kinds of basic operation
+		int type = rand.nextInt(7); // 7 kinds of basic operation
 		Operation operationToReturn = null;
 		switch (type) {
 		case 0: // Addition
@@ -42,14 +43,17 @@ public class GeneticFunctions {
 		case 4: // Power
 			operationToReturn = new Power(operator1, operator2);
 			break;
-		case 5: // Sin
-			operationToReturn = new Sin(operator1);
+		case 5: // Trigonometric
+			int kind = rand.nextInt(3);
+			if (kind == 0)
+				operationToReturn = new Sin(operator1);
+			if (kind == 1)
+				operationToReturn = new Cos(operator1);
+			if (kind == 2)
+				operationToReturn = new Tan(operator1);
 			break;
-		case 6: // Cos
-			operationToReturn = new Cos(operator1);
-			break;
-		case 7: // Tan
-			operationToReturn = new Tan(operator1);
+		case 6: // Log
+			operationToReturn = new Log(operator1);
 			break;
 		}
 		return operationToReturn;
@@ -85,6 +89,8 @@ public class GeneticFunctions {
 			return new Cos(cloneRepresentationRecursive(present.getFirstOperator()));
 		case "Tan":
 			return new Tan(cloneRepresentationRecursive(present.getFirstOperator()));
+		case "Log":
+			return new Log(cloneRepresentationRecursive(present.getFirstOperator()));
 		case "NumericValueVariable":
 			return new NumericValueVariable(((NumericValueVariable) present).getValue(),
 					((NumericValueVariable) present).isVariable());
@@ -92,7 +98,7 @@ public class GeneticFunctions {
 			return null;
 		}
 	}
-	
+
 	public static Operation mutateNumericValuesVariables(Operation representation) {
 		if (representation.getFirstOperator() != null) {
 			if (representation.getFirstOperator() instanceof NumericValueVariable) {
@@ -112,7 +118,7 @@ public class GeneticFunctions {
 		}
 		return representation;
 	}
-	
+
 	public static Operation mutateOperators(Operation representation) {
 		if (representation.getFirstOperator() != null) {
 			if (representation.getFirstOperator() instanceof NumericValueVariable) {
