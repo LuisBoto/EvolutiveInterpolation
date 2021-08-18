@@ -44,11 +44,28 @@ public abstract class Operation {
 	public int getLength() {
 		return this.getFirstOperator().getLength() + this.getSecondOperator().getLength();
 	}
-	
+
 	public int getVariableNumber() {
-		if (this.getSecondOperator()!=null)
+		if (this.getSecondOperator() != null)
 			return this.getFirstOperator().getVariableNumber() + this.getSecondOperator().getVariableNumber();
 		return this.getFirstOperator().getVariableNumber();
+	}
+
+	// Attempts to recursively simplify operations like (x + x) into 2*x etc
+	public Operation simplify() {
+		if (this.getFirstOperator() != null) {
+			this.setFirstOperator(this.getFirstOperator().simplify());
+		}
+		if (this.getSecondOperator() != null) {
+			this.setSecondOperator(this.getSecondOperator().simplify());
+		}
+		return this;
+	}
+
+	protected boolean isZero(Operation value) {
+		if (value instanceof NumericValueVariable)
+			return ((NumericValueVariable) value).getValue() <= 0.00001;
+		return false;
 	}
 
 }
