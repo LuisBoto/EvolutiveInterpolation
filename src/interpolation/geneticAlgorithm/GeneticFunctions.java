@@ -62,7 +62,7 @@ public class GeneticFunctions {
 	public static Operation getRandomVariableNumericValue() {
 		// Random variable or numeric value
 		Random rand = new Random();
-		return new NumericValueVariable(rand.nextInt(10) < 8); // 80% are variables
+		return new NumericValueVariable(rand.nextBoolean()); // 50% are variables
 	}
 
 	public static Operation cloneRepresentationRecursive(Operation present) {
@@ -180,7 +180,7 @@ public class GeneticFunctions {
 			
 			//System.out.print(landedPoints+" ");
 			double fitness = (totalError*(size-landedPoints));
-			return fitness+length; // Less fitness value is better
+			return fitness*(1+length/10); // Less fitness value is better
 		}
 	}
 

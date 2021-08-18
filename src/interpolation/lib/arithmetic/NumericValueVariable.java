@@ -51,7 +51,7 @@ public class NumericValueVariable extends Operation {
 	public String toString() {
 		if (isVariable)
 			return "x";
-		DecimalFormat df = new DecimalFormat("####.##");
+		DecimalFormat df = new DecimalFormat("####.###");
 		return df.format(this.value);
 	}
 

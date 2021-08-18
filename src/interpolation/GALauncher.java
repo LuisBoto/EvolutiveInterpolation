@@ -26,11 +26,11 @@ public class GALauncher {
 		 * Integer.parseInt(args[6]) * 1000;
 		 */
 
-		double[] pointListX = new double[100];
-		double[] pointListY = new double[100];
-		for (double i = 0; i < 100; i++) {
+		double[] pointListX = new double[20];
+		double[] pointListY = new double[20];
+		for (double i = 0; i < 20; i++) {
 			pointListX[(int) i] = i;
-			pointListY[(int) i] = 3.14*i;
+			pointListY[(int) i] = 3.14*i*i;
 		}
 		double errorMargin = 0.01;
 		int popSize = 1000;
