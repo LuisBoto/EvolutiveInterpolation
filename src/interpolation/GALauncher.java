@@ -27,9 +27,13 @@ public class GALauncher {
 		 * Integer.parseInt(args[6]) * 1000;
 		 */
 
-		double[] pointListX = { 1, 1.41, 2, 2.4, 3 };
-		double[] pointListY = { 0.841, 0.476, 0.523, 0.813, -0.35 };
-		int popSize = 1000;
+		double[] pointListX = new double[50];
+		double[] pointListY = new double[50];
+		for (double i=0; i<50; i++) {
+			pointListX[(int) i] = i;
+			pointListY[(int) i] = ((Math.pow(i, 2.0)*Math.sin(4.0*i)))/((4.0*i*i)+1);
+		}
+		int popSize = 100;
 		double crossoverProbability = 0.9;
 		double mutationProbability = 0.8;
 		int maxTime = 5000; // 5000 iterations

@@ -44,5 +44,11 @@ public abstract class Operation {
 	public int getLength() {
 		return this.getFirstOperator().getLength() + this.getSecondOperator().getLength();
 	}
+	
+	public int getVariableNumber() {
+		if (this.getSecondOperator()!=null)
+			return this.getFirstOperator().getVariableNumber() + this.getSecondOperator().getVariableNumber();
+		return this.getFirstOperator().getVariableNumber();
+	}
 
 }

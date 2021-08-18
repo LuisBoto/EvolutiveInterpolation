@@ -69,4 +69,11 @@ public class NumericValueVariable extends Operation {
 			value = r.nextInt(10) + 1;
 	}
 
+	@Override
+	public int getVariableNumber() {
+		if (this.isVariable)
+			return 1;
+		return 0;
+	}
+
 }

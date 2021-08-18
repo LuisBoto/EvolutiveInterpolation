@@ -156,19 +156,28 @@ public class GeneticFunctions {
 		}
 
 		public double apply(Individual individual) {
-			double fitness = 0;
+			double totalError = 0;
+			int landedPoints = 0;
 			int size = pointListX.length;
 
-			double coordinate;
+			Operation representation = individual.getRepresentation();
+			double coordinate, error;
 			for (int i = 0; i < size; i++) {
 				coordinate = pointListX[i];
-				fitness += Math.abs(pointListY[i] - individual.getRepresentation().computeValue(coordinate));
+				error = Math.abs(pointListY[i] - representation.computeValue(coordinate));
+				totalError += error;
+				if (error == 0)
+					landedPoints++;
 			}
-
-			int length = individual.getRepresentation().getLength();
-			if (fitness == 0)
-				length = 0;
-			return fitness + length; // Less fitness value is better
+			
+			double length = representation.getLength();
+			int variableNumber = representation.getVariableNumber();
+			if (variableNumber == 0) // Not a function
+				return Double.MAX_VALUE;
+			
+			System.out.print(landedPoints+" ");
+			length = totalError/100*length;
+			return (totalError*size+length)/(landedPoints*+1); // Less fitness value is better
 		}
 	}
 
