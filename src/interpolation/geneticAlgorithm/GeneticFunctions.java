@@ -141,18 +141,20 @@ public class GeneticFunctions {
 		return representation;
 	}
 
-	public static InterpolationFitnessFunction getFitnessFunction() {
-		return new InterpolationFitnessFunction();
+	public static InterpolationFitnessFunction getFitnessFunction(double[] pointsX, double[] pointsY, double errorMargin) {
+		return new InterpolationFitnessFunction(pointsX, pointsY, errorMargin);
 	}
 
 	public static class InterpolationFitnessFunction implements FitnessFunction {
 
 		private double[] pointListX;
 		private double[] pointListY;
+		private double errorMargin;
 
-		public void setPointList(double[] pointsX, double[] pointsY) {
+		public InterpolationFitnessFunction(double[] pointsX, double[] pointsY, double errorMargin) {
 			this.pointListX = pointsX;
 			this.pointListY = pointsY;
+			this.errorMargin = errorMargin;
 		}
 
 		public double apply(Individual individual) {
@@ -165,9 +167,10 @@ public class GeneticFunctions {
 			for (int i = 0; i < size; i++) {
 				coordinate = pointListX[i];
 				error = Math.abs(pointListY[i] - representation.computeValue(coordinate));
-				totalError += error;
-				if (error == 0)
+				if (error < errorMargin)
 					landedPoints++;
+				else
+					totalError += error;
 			}
 			
 			double length = representation.getLength();
@@ -175,9 +178,9 @@ public class GeneticFunctions {
 			if (variableNumber == 0) // Not a function
 				return Double.MAX_VALUE;
 			
-			System.out.print(landedPoints+" ");
-			length = totalError/100*length;
-			return (totalError*size+length)/(landedPoints*+1); // Less fitness value is better
+			//System.out.print(landedPoints+" ");
+			double fitness = (totalError*(size-landedPoints));
+			return fitness+length; // Less fitness value is better
 		}
 	}
 

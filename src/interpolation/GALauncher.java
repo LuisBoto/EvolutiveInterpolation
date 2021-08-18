@@ -8,7 +8,6 @@ import javax.script.ScriptException;
 import interpolation.geneticAlgorithm.FitnessFunction;
 import interpolation.geneticAlgorithm.GeneticAlgorithm;
 import interpolation.geneticAlgorithm.GeneticFunctions;
-import interpolation.geneticAlgorithm.GeneticFunctions.InterpolationFitnessFunction;
 import interpolation.geneticAlgorithm.Individual;
 
 public class GALauncher {
@@ -27,25 +26,26 @@ public class GALauncher {
 		 * Integer.parseInt(args[6]) * 1000;
 		 */
 
-		double[] pointListX = new double[50];
-		double[] pointListY = new double[50];
-		for (double i=0; i<50; i++) {
+		double[] pointListX = new double[100];
+		double[] pointListY = new double[100];
+		for (double i = 0; i < 100; i++) {
 			pointListX[(int) i] = i;
-			pointListY[(int) i] = ((Math.pow(i, 2.0)*Math.sin(4.0*i)))/((4.0*i*i)+1);
+			pointListY[(int) i] = 3.14*i;
 		}
-		int popSize = 100;
-		double crossoverProbability = 0.9;
-		double mutationProbability = 0.8;
+		double errorMargin = 0.01;
+		int popSize = 1000;
+		double crossoverProbability = 0.4;
+		double mutationProbability = 0.9;
 		int maxTime = 5000; // 5000 iterations
-		callGeneticAlgorithm(pointListX, pointListY, popSize, crossoverProbability, mutationProbability, maxTime);
+		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
+				maxTime);
 	}
 
-	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, int populationSize,
-			double crossoverProbability, double mutationProbability, int maxTime) {
+	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, double errorMargin,
+			int populationSize, double crossoverProbability, double mutationProbability, int maxTime) {
 
 		System.out.println("--- GeneticAlgorithm ---");
-		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction();
-		((InterpolationFitnessFunction) fitnessFunction).setPointList(pointListX, pointListY);
+		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin);
 
 		// Generate an initial population
 		Collection<Individual> population = new ArrayList<Individual>();

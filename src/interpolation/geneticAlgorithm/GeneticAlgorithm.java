@@ -201,7 +201,7 @@ public class GeneticAlgorithm extends Algorithm {
 			if (mutatedRepresentation.getLength() > 1) 
 				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
 		}
-		if (mutationType == 1) { // Add new oepration
+		if (mutationType == 1) { // Add new operation
 			Operation newOperator = GeneticFunctions.getRandomOperation();
 			newOperator.setFirstOperator(mutatedRepresentation);
 			mutatedRepresentation = newOperator;
