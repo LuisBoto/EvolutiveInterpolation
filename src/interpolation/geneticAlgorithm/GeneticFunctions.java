@@ -180,7 +180,7 @@ public class GeneticFunctions {
 			
 			//System.out.print(landedPoints+" ");
 			double fitness = (totalError*(size-landedPoints));
-			return fitness*(1+length/10); // Less fitness value is better
+			return fitness*(1.0+length/10.0); // Less fitness value is better
 		}
 	}
 

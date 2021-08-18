@@ -80,9 +80,11 @@ public class GeneticAlgorithm extends Algorithm {
 
 			population = nextGeneration(population, bestIndividual);
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
+			this.validatePopulation(population);
 			this.calculateFitness(population, fitnessFn);
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			bestIndividual = retrieveBestIndividual(population);
+			metrics.setValue("bestFitness", bestIndividual.getFitness());
 			printStatus(bestIndividual);
 		} while (!this.stopCondition());
 
@@ -179,7 +181,7 @@ public class GeneticAlgorithm extends Algorithm {
 		} else {
 			child = x.getRepresentation();
 			Operation second = y.getRepresentation();
-			if (second.getFirstOperator()!=null)
+			if (second.getFirstOperator() != null)
 				child.setFirstOperator(second.getFirstOperator());
 		}
 		metrics.incrementIntValue("crossovers");
@@ -198,7 +200,7 @@ public class GeneticAlgorithm extends Algorithm {
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(5);
 		if (mutationType == 0) { // Remove last operation if possible
-			if (mutatedRepresentation.getLength() > 1) 
+			if (mutatedRepresentation.getLength() > 1)
 				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
 		}
 		if (mutationType == 1) { // Add new operation
@@ -232,6 +234,9 @@ public class GeneticAlgorithm extends Algorithm {
 	protected void validatePopulation(Collection<Individual> population) {
 		if (population.size() < 1) {
 			throw new IllegalArgumentException("Must start with at least a population of size 1");
+		}
+		for (int i = 0; i < population.size(); i++) {
+			((ArrayList<Individual>) population).get(i).simplifyRepresentation();
 		}
 	}
 

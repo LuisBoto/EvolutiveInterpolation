@@ -17,6 +17,10 @@ public class Individual {
 		// nature of the Operation class.
 		return GeneticFunctions.cloneRepresentationRecursive(this.representation);
 	}
+	
+	public void simplifyRepresentation() {
+		this.representation = this.representation.simplify();
+	}
 
 	public double getFitness() {
 		return this.fitness;
