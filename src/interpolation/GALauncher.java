@@ -36,13 +36,14 @@ public class GALauncher {
 		int popSize = 10000;
 		double crossoverProbability = 0.4;
 		double mutationProbability = 0.9;
-		int maxTime = 5000; // 5000 iterations
+		int maxTime = 50000; 
+		boolean saveExecutionData = false;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
-				maxTime);
+				maxTime, saveExecutionData);
 	}
 
 	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, double errorMargin,
-			int populationSize, double crossoverProbability, double mutationProbability, int maxTime) {
+			int populationSize, double crossoverProbability, double mutationProbability, int maxTime, boolean saveExecutionData) {
 
 		System.out.println("--- GeneticAlgorithm ---");
 		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin);
@@ -51,11 +52,10 @@ public class GALauncher {
 		Collection<Individual> population = new ArrayList<Individual>();
 		for (int i = 0; i < populationSize; i++)
 			population.add(GeneticFunctions.generateRandomIndividual());
-
 		GeneticAlgorithm ga = new GeneticAlgorithm(crossoverProbability, mutationProbability, maxTime);
+		
 		System.out.println("Starting evolution");
-		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction);
-
+		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, saveExecutionData);
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
 		System.out.println("Fitness = " + fitnessFunction.apply(bestIndividual));
 		System.out.println("Population Size = " + ga.getPopulationSize());

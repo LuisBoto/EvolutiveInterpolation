@@ -66,6 +66,10 @@ public class MetricStorage {
 		hash.put(name, Long.toString(l));
 	}
 	
+	public void setValue(String name, String value) {
+		hash.put(name, value);
+	}
+	
 	public void incrementIntValue(String name) {
 		setValue(name, getInt(name) + 1);
 	}
@@ -98,4 +102,5 @@ public class MetricStorage {
 		TreeMap<String, String> map = new TreeMap<String, String>(hash);
 		return map.toString();
 	}
+
 }

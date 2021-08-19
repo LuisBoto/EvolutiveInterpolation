@@ -37,14 +37,14 @@ public class GeneticAlgorithm extends Algorithm {
 		this.addProgressTracker(Algorithm.ITERATIONS);
 		this.addProgressTracker(Algorithm.TIME_IN_MILLISECONDS);
 		this.addProgressTracker("bestFitness");
+		this.addProgressTracker("bestIndividual");
 		this.addProgressTracker("mutations");
 		this.addProgressTracker("crossovers");
 	}
 
 	@Override
 	protected boolean stopCondition() {
-		// return getTimeInMilliseconds() > this.maxTime;
-		return metrics.getValue("bestFitness").equals("0.0");// || getIterations() >= maxTime;
+		return metrics.getValue("bestFitness").equals("0.0") || this.getTimeInMilliseconds() >= maxTime;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class GeneticAlgorithm extends Algorithm {
 		return getIterations() % 10 == 0;
 	}
 
-	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn) {
+	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn, boolean saveExecutionData) {
 		// Initial values
 		metrics.setValue("mutations", 0);
 		metrics.setValue("crossovers", 0);
@@ -76,6 +76,7 @@ public class GeneticAlgorithm extends Algorithm {
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			metrics.setValue(Algorithm.ITERATIONS, itCount);
 			metrics.setValue("bestFitness", bestIndividual.getFitness());
+			metrics.setValue("bestIndividual", bestIndividual.getRepresentation().toString());
 			metricsDumpCheck();
 
 			population = nextGeneration(population, bestIndividual);
@@ -85,10 +86,12 @@ public class GeneticAlgorithm extends Algorithm {
 			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			bestIndividual = retrieveBestIndividual(population);
 			metrics.setValue("bestFitness", bestIndividual.getFitness());
+			metrics.setValue("bestIndividual", bestIndividual.getRepresentation().toString());
 			printStatus(bestIndividual);
 		} while (!this.stopCondition());
 
-		metricsDumpCheck();
+		if (saveExecutionData)
+			metricsDumpCheck();
 		return bestIndividual;
 	}
 
