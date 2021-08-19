@@ -44,6 +44,8 @@ public class GeneticAlgorithm extends Algorithm {
 
 	@Override
 	protected boolean stopCondition() {
+		if (maxTime <= 0)
+			return metrics.getValue("bestFitness").equals("0.0");
 		return metrics.getValue("bestFitness").equals("0.0") || this.getTimeInMilliseconds() >= maxTime;
 	}
 
@@ -55,7 +57,8 @@ public class GeneticAlgorithm extends Algorithm {
 		return getIterations() % 10 == 0;
 	}
 
-	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn, boolean saveExecutionData) {
+	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn,
+			boolean saveExecutionData) {
 		// Initial values
 		metrics.setValue("mutations", 0);
 		metrics.setValue("crossovers", 0);
