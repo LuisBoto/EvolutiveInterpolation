@@ -7,7 +7,7 @@ import interpolation.geneticAlgorithm.Individual;
 import interpolation.lib.arithmetic.Operation;
 import junit.framework.Assert;
 
-class SimplificationTest {
+class ArithmeticTest {
 
 	@Test
 	void simplificationTest() {
@@ -24,6 +24,21 @@ class SimplificationTest {
 					value1 = value2;
 				Assert.assertEquals(value1, value2);
 			}
+		}
+	}
+
+	@Test
+	void addingToLeafTest() {
+		Operation initial;
+		for (int i = 0; i < 10; i++) {
+			initial = GeneticFunctions.getRandomOperation();
+			System.out.print(initial+"\t->");
+			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
+			System.out.print(initial+"\t->");
+			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
+			System.out.print(initial+"\t->");
+			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
+			System.out.print(initial+"\n");
 		}
 	}
 

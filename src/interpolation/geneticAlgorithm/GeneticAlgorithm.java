@@ -205,14 +205,17 @@ public class GeneticAlgorithm extends Algorithm {
 	protected Individual mutate(Individual child) {
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(5);
-		if (mutationType == 0) { // Remove last operation if possible
-			if (mutatedRepresentation.getLength() > 1)
-				mutatedRepresentation = mutatedRepresentation.getFirstOperator();
+		// TODO: Change for a switch block
+		if (mutationType == 0) { // Remove one half if possible
+			if (mutatedRepresentation.getLength() > 1) {
+				if (mutatedRepresentation.getSecondOperator() != null)
+					mutatedRepresentation = mutatedRepresentation.getSecondOperator();
+				else
+					mutatedRepresentation = mutatedRepresentation.getFirstOperator();
+			}
 		}
-		if (mutationType == 1) { // Add new operation
-			Operation newOperator = GeneticFunctions.getRandomOperation();
-			newOperator.setFirstOperator(mutatedRepresentation);
-			mutatedRepresentation = newOperator;
+		if (mutationType == 1) { // Add new operation to a leaf operation
+			mutatedRepresentation.addOperationToLeaf(GeneticFunctions.getRandomOperation());
 		}
 		if (mutationType == 2) { // Change this Operation type
 			Operation newOperator = GeneticFunctions.getRandomOperation();
@@ -222,10 +225,10 @@ public class GeneticAlgorithm extends Algorithm {
 				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
 			mutatedRepresentation = newOperator;
 		}
-		if (mutationType == 3) { // Change numeric/variable values and kind
+		if (mutationType == 3) { // Change numeric values and variables
 			mutatedRepresentation = GeneticFunctions.mutateNumericValuesVariables(mutatedRepresentation);
 		}
-		if (mutationType == 4) { // Change operators
+		if (mutationType == 4) { // Change operators while keeping numeric values & variables
 			mutatedRepresentation = GeneticFunctions.mutateOperators(mutatedRepresentation);
 		}
 
