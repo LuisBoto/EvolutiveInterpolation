@@ -34,7 +34,7 @@ public class GALauncher {
 		}
 		double errorMargin = 0.1;
 		int popSize = 10000;
-		double crossoverProbability = 0.5;
+		double crossoverProbability = 0.8;
 		double mutationProbability = 0.9;
 		int maxTime = 0; 
 		boolean saveExecutionData = false;
