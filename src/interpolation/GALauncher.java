@@ -6,9 +6,9 @@ import java.util.Collection;
 import javax.script.ScriptException;
 
 import interpolation.geneticAlgorithm.FitnessFunction;
-import interpolation.geneticAlgorithm.GeneticAlgorithm;
 import interpolation.geneticAlgorithm.GeneticFunctions;
 import interpolation.geneticAlgorithm.Individual;
+import interpolation.geneticAlgorithm.InterpolationGeneticAlgorithm;
 
 public class GALauncher {
 
@@ -33,7 +33,7 @@ public class GALauncher {
 			pointListY[(int) i] = -1*Math.log(Math.pow(i+1, 3.14));
 		}
 		double errorMargin = 0.1;
-		int popSize = 100;
+		int popSize = 10;
 		double crossoverProbability = 0.8;
 		double mutationProbability = 0.9;
 		int maxTime = 0; 
@@ -52,15 +52,15 @@ public class GALauncher {
 		Collection<Individual> population = new ArrayList<Individual>();
 		for (int i = 0; i < populationSize; i++)
 			population.add(GeneticFunctions.generateRandomIndividual());
-		GeneticAlgorithm ga = new GeneticAlgorithm(crossoverProbability, mutationProbability, maxTime);
+		InterpolationGeneticAlgorithm ga = new InterpolationGeneticAlgorithm(crossoverProbability, mutationProbability, maxTime);
 		
 		System.out.println("Starting evolution");
 		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, saveExecutionData);
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
 		System.out.println("Fitness = " + fitnessFunction.apply(bestIndividual));
-		System.out.println("Population Size = " + ga.getPopulationSize());
-		System.out.println("Iterations = " + ga.getIterations());
-		System.out.println("Took = " + ga.getTimeInMilliseconds() + "ms.");
+		System.out.println("Population Size = " + populationSize);
+		System.out.println("Iterations = " + ga.getGenerations());
+		System.out.println("Took = " + ga.getRunningTimeInMilliseconds() + "ms.");
 	}
 
 }

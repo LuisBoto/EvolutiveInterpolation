@@ -2,106 +2,69 @@ package interpolation.geneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import interpolation.lib.Util;
 import interpolation.lib.arithmetic.Operation;
-import interpolation.metricFramework.Algorithm;
 
-public class GeneticAlgorithm extends Algorithm {
+public class InterpolationGeneticAlgorithm {
 
 	protected double crossoverProbability;
 	protected double mutationProbability;
 	protected int maxTime;
 	protected Random random;
+	private Individual bestIndividual;
+	private double startTime;
+	private int generations;
 
-	public GeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime) {
-		this(crossoverProbability, mutationProbability, maxTime, new Random());
-	}
-
-	public GeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime, Random random) {
-		super(); // Calls createTrackers and thread
+	public InterpolationGeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime) {
 		this.crossoverProbability = crossoverProbability;
 		this.mutationProbability = mutationProbability;
 		this.maxTime = maxTime;
-		this.random = random;
+		this.random = new Random();
 
 		assert (this.mutationProbability >= 0.0 && this.mutationProbability <= 1.0);
 		assert (this.crossoverProbability >= 0.0 && this.crossoverProbability <= 1.0);
 	}
 
-	@Override
-	protected void createTrackers() {
-		this.addProgressTracker(Algorithm.ITERATIONS);
-		this.addProgressTracker(Algorithm.TIME_IN_MILLISECONDS);
-		this.addProgressTracker("bestFitness");
-		this.addProgressTracker("bestIndividual");
-		this.addProgressTracker("mutations");
-		this.addProgressTracker("crossovers");
-	}
-
-	@Override
-	protected boolean stopCondition() {
+	private boolean stopCondition() {
 		if (maxTime <= 0)
-			return metrics.getValue("bestFitness").equals("0.0");
-		return metrics.getValue("bestFitness").equals("0.0") || this.getTimeInMilliseconds() >= maxTime;
+			return this.bestIndividual.getFitness() == 0.0;
+		return this.bestIndividual.getFitness() == 0.0 || this.getRunningTimeInMilliseconds() >= maxTime;
 	}
 
-	@Override
-	protected boolean saveCondition() {
-		// long module10s = getTimeInMilliseconds() % 10000;
-		// return (module10s > 9950 || module10s < 50); // Every 10s save metrics, with
-		// an error margin
-		return getIterations() % 10 == 0;
+	public double getRunningTimeInMilliseconds() {
+		return System.currentTimeMillis() - this.startTime;
 	}
 
 	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn,
 			boolean saveExecutionData) {
-		// Initial values
-		metrics.setValue("mutations", 0);
-		metrics.setValue("crossovers", 0);
-		Individual bestIndividual = null;
-
 		// Create a local copy of the population to work with
 		List<Individual> population = new ArrayList<>(initPopulation);
 		validatePopulation(population);
 
-		updateMetrics(population, 0);
 		this.calculateFitness(initPopulation, fitnessFn); // Must be called so fitness values are available
-		bestIndividual = retrieveBestIndividual(initPopulation);
+		this.bestIndividual = retrieveBestIndividual(initPopulation);
 		this.startTime = System.currentTimeMillis();
-		int itCount = 0;
+		this.generations = 0;
 
 		do {
-			updateMetrics(population, ++itCount);
-			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
-			metrics.setValue(Algorithm.ITERATIONS, itCount);
-			metrics.setValue("bestFitness", bestIndividual.getFitness());
-			metrics.setValue("bestIndividual", bestIndividual.getRepresentation().toString());
-			metricsDumpCheck();
-
 			population = nextGeneration(population, bestIndividual);
-			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
 			this.validatePopulation(population);
 			this.calculateFitness(population, fitnessFn);
-			metrics.setValue(Algorithm.TIME_IN_MILLISECONDS, this.getTimeInMilliseconds());
-			bestIndividual = retrieveBestIndividual(population);
-			metrics.setValue("bestFitness", bestIndividual.getFitness());
-			metrics.setValue("bestIndividual", bestIndividual.getRepresentation().toString());
-			printStatus(bestIndividual);
+			this.bestIndividual = retrieveBestIndividual(population);
+			printStatus();
+			this.generations++;
 		} while (!this.stopCondition());
 
-		if (saveExecutionData)
-			metricsDumpCheck();
 		return bestIndividual;
 	}
 
-	private void printStatus(Individual bestIndividual) {
+	private void printStatus() {
 		// Monitor fitness, time, iteration etc.
-		System.out.println("\nTime: " + getTimeInMilliseconds() + " Gen: " + getIterations() + " Best f: "
-				+ metrics.getValue("bestFitness") + " Best individual: " + bestIndividual.toString());
+		System.out.println("\nTime: " + this.getRunningTimeInMilliseconds() + " Gen: " + this.generations + " Best f: "
+				+ bestIndividual.getFitness() + " Best individual: " + bestIndividual.toString());
 	}
 
 	public Individual retrieveBestIndividual(Collection<Individual> population) {
@@ -115,7 +78,6 @@ public class GeneticAlgorithm extends Algorithm {
 				bestSoFarFValue = fValue;
 			}
 		}
-
 		return bestIndividual;
 	}
 
@@ -190,7 +152,7 @@ public class GeneticAlgorithm extends Algorithm {
 			if (second.getFirstOperator() != null)
 				child.setFirstOperator(second.getFirstOperator());
 		}
-		metrics.incrementIntValue("crossovers");
+
 		return new Individual(child);
 	}
 
@@ -233,7 +195,6 @@ public class GeneticAlgorithm extends Algorithm {
 			break;
 		}
 
-		metrics.incrementIntValue("mutations");
 		return new Individual(mutatedRepresentation);
 	}
 
@@ -250,12 +211,8 @@ public class GeneticAlgorithm extends Algorithm {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	protected String getExecutionFilename() {
-		return "GAInterpolation_" + getPopulationSize() + "_" + crossoverProbability + "_" + mutationProbability + "_"
-				+ maxTime + "_GMT_" + new Date().toGMTString().replace(':', '_').replace(" ", "_")
-				+ random.nextInt(10000) + ".csv";
+	public int getGenerations() {
+		return this.generations;
 	}
 
 }
