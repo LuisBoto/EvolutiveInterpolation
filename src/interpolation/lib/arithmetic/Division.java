@@ -33,7 +33,7 @@ public class Division extends Operation {
 			if (super.isZero(this.getFirstOperator()))
 				return new NumericValueVariable(0, false);
 			if (super.isZero(this.getSecondOperator()))
-				return new NumericValueVariable(Double.MAX_VALUE, false);
+				return new NumericValueVariable(Double.MAX_VALUE, false); // infinite
 		}
 		if (this.getFirstOperator().toString().equals(this.getSecondOperator().toString())) {
 			// Both operators encode the same arithmetic operation (ex: x/x turns into 1)

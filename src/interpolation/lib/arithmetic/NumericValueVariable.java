@@ -16,16 +16,22 @@ public class NumericValueVariable extends Operation {
 
 	public NumericValueVariable(boolean isVariable) {
 		super(null, null); // No operands just a single value
-		Random rand = new Random();
-		if (rand.nextBoolean())
-			this.value = rand.nextDouble() * 10 + 1;
-		else
-			this.value = rand.nextInt(10) + 1;
+		this.setRandomValue();
 		this.isVariable = isVariable;
 	}
 
 	public void setValue(double newValue) {
 		this.value = newValue;
+	}
+
+	public void setRandomValue() {
+		Random rand = new Random();
+		if (rand.nextBoolean())
+			this.value = rand.nextDouble() * 10 + 1;
+		else
+			this.value = rand.nextInt(10) + 1;
+		if (rand.nextBoolean()) // Whether it'll be negative
+			this.value *= -1;
 	}
 
 	public double getValue() {
@@ -63,10 +69,7 @@ public class NumericValueVariable extends Operation {
 	public void mutate() {
 		Random r = new Random();
 		isVariable = r.nextBoolean();
-		if (r.nextBoolean())
-			value = r.nextDouble() * 10.0 + 1;
-		else
-			value = r.nextInt(10) + 1;
+		this.setRandomValue();
 	}
 
 	@Override
