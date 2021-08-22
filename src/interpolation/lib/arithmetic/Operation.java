@@ -64,9 +64,18 @@ public abstract class Operation {
 		return this;
 	}
 
+	protected boolean isZeroOrNegative(Operation value) {
+		if (value instanceof NumericValueVariable)
+			if (!((NumericValueVariable) value).isVariable())
+				return ((NumericValueVariable) value).getValue() <= 0.00001;
+		return false;
+	}
+
 	protected boolean isZero(Operation value) {
 		if (value instanceof NumericValueVariable)
-			return ((NumericValueVariable) value).getValue() <= 0.00001;
+			if (!((NumericValueVariable) value).isVariable())
+				return ((NumericValueVariable) value).getValue() <= 0.00001
+						&& ((NumericValueVariable) value).getValue() >= 0;
 		return false;
 	}
 

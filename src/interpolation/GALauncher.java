@@ -30,7 +30,7 @@ public class GALauncher {
 		double[] pointListY = new double[20];
 		for (double i = 0; i < 20; i++) {
 			pointListX[(int) i] = i;
-			pointListY[(int) i] = -1*Math.log(Math.pow(i+1, 3.14));
+			pointListY[(int) i] = -1*Math.log(1+3.14*i);
 		}
 		double errorMargin = 0.1;
 		int popSize = 10;

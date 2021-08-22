@@ -207,6 +207,7 @@ public class InterpolationGeneticAlgorithm {
 			throw new IllegalArgumentException("Must start with at least a population of size 1");
 		}
 		for (int i = 0; i < population.size(); i++) {
+			//System.out.println(((ArrayList<Individual>) population).get(i).getRepresentation().toString());
 			((ArrayList<Individual>) population).get(i).simplifyRepresentation();
 		}
 	}

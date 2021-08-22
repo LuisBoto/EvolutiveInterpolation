@@ -11,6 +11,7 @@ import interpolation.lib.arithmetic.NumericValueVariable;
 import interpolation.lib.arithmetic.Operation;
 import interpolation.lib.arithmetic.Power;
 import interpolation.lib.arithmetic.Sin;
+import interpolation.lib.arithmetic.SquareRoot;
 import interpolation.lib.arithmetic.Subtraction;
 import interpolation.lib.arithmetic.Tan;
 
@@ -25,7 +26,7 @@ public class GeneticFunctions {
 		Operation operator1 = getRandomVariableNumericValue();
 		Operation operator2 = getRandomVariableNumericValue();
 		// Random type of operation
-		int type = rand.nextInt(7); // 7 kinds of basic operation
+		int type = rand.nextInt(8); // 8 kinds of basic operation
 		Operation operationToReturn = null;
 		switch (type) {
 		case 0: // Addition
@@ -54,6 +55,9 @@ public class GeneticFunctions {
 			break;
 		case 6: // Log
 			operationToReturn = new Log(operator1);
+			break;
+		case 7: // Square root
+			operationToReturn = new SquareRoot(operator1);
 			break;
 		}
 		return operationToReturn;
@@ -91,6 +95,8 @@ public class GeneticFunctions {
 			return new Tan(cloneRepresentationRecursive(present.getFirstOperator()));
 		case "Log":
 			return new Log(cloneRepresentationRecursive(present.getFirstOperator()));
+		case "SquareRoot":
+			return new SquareRoot(cloneRepresentationRecursive(present.getFirstOperator()));
 		case "NumericValueVariable":
 			return new NumericValueVariable(((NumericValueVariable) present).getValue(),
 					((NumericValueVariable) present).isVariable());
