@@ -28,12 +28,12 @@ public class GALauncher {
 
 		double[] pointListX = new double[20];
 		double[] pointListY = new double[20];
-		for (double i = 0.0; i < 20; i++) {
+		for (double i = 0; i < 20; i++) {
 			pointListX[(int) i] = i;
-			pointListY[(int) i] = -1*Math.log(1+3.14*i);
+			pointListY[(int) i] = i*i + 2*i + 15;
 		}
-		double errorMargin = 0.1;
-		int popSize = 10;
+		double errorMargin = 0.01;
+		int popSize = 1000;
 		double crossoverProbability = 0.8;
 		double mutationProbability = 0.9;
 		int maxTime = 0; 

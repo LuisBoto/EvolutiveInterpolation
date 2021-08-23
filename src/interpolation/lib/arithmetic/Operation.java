@@ -79,6 +79,12 @@ public abstract class Operation {
 		return false;
 	}
 
+	protected boolean isVariableValue(Operation value) {
+		if (value instanceof NumericValueVariable)
+			return ((NumericValueVariable) value).isVariable();
+		return false;
+	}
+
 	public void addOperationToLeaf(Operation operationToAdd) {
 		// This method adds parameter operation to a leaf node.
 		// Parameter must be an operation containing a desired second operator.

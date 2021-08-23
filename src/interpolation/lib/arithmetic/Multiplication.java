@@ -37,6 +37,13 @@ public class Multiplication extends Operation {
 			// Both operators encode the same arithmetic operation (ex: x*x turns into x²)
 			return new Power(this.getFirstOperator(), new NumericValueVariable(2, false));
 		}
+		
+		if (isVariableValue(this.getFirstOperator())
+				&& ((NumericValueVariable) this.getFirstOperator()).getValue() == 1)
+			return this.getSecondOperator();
+		if (isVariableValue(this.getSecondOperator())
+				&& ((NumericValueVariable) this.getSecondOperator()).getValue() == 1)
+			return this.getFirstOperator();
 		return simplifiedOperation;
 	}
 

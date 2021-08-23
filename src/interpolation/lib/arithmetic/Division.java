@@ -15,7 +15,7 @@ public class Division extends Operation {
 	public String toString() {
 		return "((" + firstOperator.toString() + ") / (" + secondOperator.toString() + "))";
 	}
-	
+
 	@Override
 	public Operation simplify() {
 		Operation simplifiedOperation = super.simplify(); // Super implementation handles recursivity
@@ -39,6 +39,9 @@ public class Division extends Operation {
 			// Both operators encode the same arithmetic operation (ex: x/x turns into 1)
 			return new NumericValueVariable(1, false);
 		}
+		if (isVariableValue(this.getSecondOperator())
+				&& ((NumericValueVariable) this.getSecondOperator()).getValue() == 1)
+			return this.getFirstOperator();
 		return simplifiedOperation;
 	}
 

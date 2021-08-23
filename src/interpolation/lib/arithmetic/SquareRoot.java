@@ -12,7 +12,7 @@ public class SquareRoot extends Operation {
 	public double computeValue(double variableValue) {
 		return Math.sqrt(firstOperator.computeValue(variableValue));
 	}
-	
+
 	@Override
 	public int getLength() {
 		return this.getFirstOperator().getLength() + 1;
@@ -31,16 +31,22 @@ public class SquareRoot extends Operation {
 			// If zero or negative
 			return new NumericValueVariable(0, false);
 		}
-		if (this.getFirstOperator() instanceof NumericValueVariable && !((NumericValueVariable) this.getFirstOperator()).isVariable())
+		if (this.getFirstOperator() instanceof NumericValueVariable
+				&& !((NumericValueVariable) this.getFirstOperator()).isVariable())
 			return new NumericValueVariable(this.computeValue(1), false);
+		if (this.getFirstOperator() instanceof Power) {
+			if (isVariableValue(this.getFirstOperator().getSecondOperator())
+					&& ((NumericValueVariable) this.getFirstOperator().getSecondOperator()).getValue() == 2)
+				return this.getFirstOperator().getFirstOperator();
+		}
 		return simplifiedOperation;
 	}
-	
+
 	@Override
 	public Operation getSecondOperator() {
 		return null;
 	}
-	
+
 	@Override
 	public Operation mutateOperator() {
 		Operation mutated = GeneticFunctions.getRandomOperation();
