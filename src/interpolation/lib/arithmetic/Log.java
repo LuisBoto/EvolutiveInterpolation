@@ -1,5 +1,7 @@
 package interpolation.lib.arithmetic;
 
+import javax.management.remote.SubjectDelegationPermission;
+
 import interpolation.geneticAlgorithm.GeneticFunctions;
 
 public class Log extends Operation {
@@ -22,16 +24,28 @@ public class Log extends Operation {
 	public int getLength() {
 		return this.getFirstOperator().getLength() + 1;
 	}
-	
+
 	@Override
 	public Operation getSecondOperator() {
 		return null;
 	}
-	
+
 	@Override
 	public Operation mutateOperator() {
 		Operation mutated = GeneticFunctions.getRandomOperation();
 		mutated.setFirstOperator(this.getFirstOperator());
 		return mutated;
+	}
+
+	@Override
+	public Operation simplify() {
+		Operation simplifiedOperation = super.simplify();
+		if (super.isZeroOrNegative(this.getFirstOperator()))
+			return new NumericValueVariable(0, false);
+		if (this.getFirstOperator() instanceof NumericValueVariable) {
+			double value = ((NumericValueVariable) getFirstOperator()).getValue();
+			return new NumericValueVariable(Math.log(value), false);
+		}
+		return simplifiedOperation;
 	}
 }

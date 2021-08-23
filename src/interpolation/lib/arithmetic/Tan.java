@@ -34,4 +34,14 @@ public class Tan extends Operation {
 		mutated.setFirstOperator(this.getFirstOperator());
 		return mutated;
 	}
+	
+	@Override
+	public Operation simplify() {
+		Operation simplifiedOperation = super.simplify();
+		if (this.getFirstOperator() instanceof NumericValueVariable) {
+			double value = ((NumericValueVariable) getFirstOperator()).getValue();
+			return new NumericValueVariable(Math.tan(value), false);
+		}
+		return simplifiedOperation;
+	}
 }

@@ -22,17 +22,27 @@ public class Sin extends Operation {
 	public int getLength() {
 		return this.getFirstOperator().getLength() + 1;
 	}
-	
+
 	@Override
 	public Operation getSecondOperator() {
 		return null;
 	}
-	
+
 	@Override
 	public Operation mutateOperator() {
 		Operation mutated = GeneticFunctions.getRandomOperation();
 		mutated.setFirstOperator(this.getFirstOperator());
 		return mutated;
+	}
+
+	@Override
+	public Operation simplify() {
+		Operation simplifiedOperation = super.simplify();
+		if (this.getFirstOperator() instanceof NumericValueVariable) {
+			double value = ((NumericValueVariable) getFirstOperator()).getValue();
+			return new NumericValueVariable(Math.sin(value), false);
+		}
+		return simplifiedOperation;
 	}
 
 }

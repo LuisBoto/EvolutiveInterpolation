@@ -147,7 +147,8 @@ public class GeneticFunctions {
 		return representation;
 	}
 
-	public static InterpolationFitnessFunction getFitnessFunction(double[] pointsX, double[] pointsY, double errorMargin) {
+	public static InterpolationFitnessFunction getFitnessFunction(double[] pointsX, double[] pointsY,
+			double errorMargin) {
 		return new InterpolationFitnessFunction(pointsX, pointsY, errorMargin);
 	}
 
@@ -169,6 +170,10 @@ public class GeneticFunctions {
 			int size = pointListX.length;
 
 			Operation representation = individual.getRepresentation();
+			int variableNumber = representation.getVariableNumber();
+			if (variableNumber == 0) // Not a function
+				return Double.MAX_VALUE;
+
 			double coordinate, error;
 			for (int i = 0; i < size; i++) {
 				coordinate = pointListX[i];
@@ -178,15 +183,24 @@ public class GeneticFunctions {
 				else
 					totalError += error;
 			}
-			
+
+			double pointShapeOriginal, pointShapeIndividual, point1, point2;
+			double pointShapeError = 0.0;
+			for (int i = 1; i < size; i++) {
+				pointShapeOriginal = pointListY[i] - pointListY[i - 1];
+				point1 = representation.computeValue(pointListX[i]);
+				point2 = representation.computeValue(pointListX[i - 1]);
+				pointShapeIndividual = point1 - point2;
+
+				error = Math.abs(pointShapeOriginal - pointShapeIndividual);
+				if (error > errorMargin)
+					pointShapeError += error;
+			}
+
 			double length = representation.getLength();
-			int variableNumber = representation.getVariableNumber();
-			if (variableNumber == 0) // Not a function
-				return Double.MAX_VALUE;
-			
 			//System.out.print(landedPoints+" ");
-			double fitness = (totalError*(size-landedPoints));
-			return fitness*(1.0+length/10.0); // Less fitness value is better
+			double fitness = (totalError + pointShapeError) * (size - landedPoints);
+			return fitness * (1.0 + length / 10.0); // Less fitness value is better
 		}
 	}
 
