@@ -13,6 +13,14 @@ public class Multiplication extends Operation {
 
 	@Override
 	public String toString() {
+		if (isVariableValue(firstOperator)) {
+			if (this.isLeaf(secondOperator) && !isVariableValue(secondOperator))
+				return secondOperator.toString() + firstOperator.toString();
+		}
+		if (isVariableValue(secondOperator)) {
+			if (this.isLeaf(firstOperator) && !isVariableValue(firstOperator))
+				return firstOperator.toString() + secondOperator.toString();
+		}
 		return "(" + firstOperator.toString() + ")*(" + secondOperator.toString() + ")";
 	}
 
@@ -37,7 +45,7 @@ public class Multiplication extends Operation {
 			// Both operators encode the same arithmetic operation (ex: x*x turns into x²)
 			return new Power(this.getFirstOperator(), new NumericValueVariable(2, false));
 		}
-		
+
 		if (isVariableValue(this.getFirstOperator())
 				&& ((NumericValueVariable) this.getFirstOperator()).getValue() == 1)
 			return this.getSecondOperator();

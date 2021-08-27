@@ -168,13 +168,8 @@ public class InterpolationGeneticAlgorithm {
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(5);
 		switch (mutationType) {
-		case 0: // Remove one half if possible
-			if (mutatedRepresentation.getLength() > 1) {
-				if (mutatedRepresentation.getSecondOperator() != null)
-					mutatedRepresentation = mutatedRepresentation.getSecondOperator();
-				else
-					mutatedRepresentation = mutatedRepresentation.getFirstOperator();
-			}
+		case 0: // Remove one leaf operation
+			mutatedRepresentation = mutatedRepresentation.removeLeafOperation();
 			break;
 		case 1: // Add new operation to a leaf operation
 			mutatedRepresentation.addOperationToLeaf(GeneticFunctions.getRandomOperation());

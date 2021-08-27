@@ -95,22 +95,19 @@ public abstract class Operation {
 		if (this instanceof NumericValueVariable)
 			return; // Nothing to do
 		// Operation shall be added to first leaf found, with preference for the second.
-		if (this.getSecondOperator() != null) {
-			if (this.getSecondOperator() instanceof NumericValueVariable) {
-				operationToAdd.setFirstOperator(this.getSecondOperator());
-				this.setSecondOperator(operationToAdd);
-				return;
-			}
+		if (isLeaf(this.getSecondOperator())) {
+			operationToAdd.setFirstOperator(this.getSecondOperator());
+			this.setSecondOperator(operationToAdd);
+			return;
 		}
-		if (this.getFirstOperator() != null) {
-			if (this.getFirstOperator() instanceof NumericValueVariable) {
-				operationToAdd.setFirstOperator(this.getFirstOperator());
-				this.setFirstOperator(operationToAdd);
-				return;
-			}
+		if (isLeaf(this.getFirstOperator())) {
+			operationToAdd.setFirstOperator(this.getFirstOperator());
+			this.setFirstOperator(operationToAdd);
+			return;
 		}
 		// If none are leafs, recursive deeper call on a side.
-		if (this.getSecondOperator() != null)
+		Random r = new Random();
+		if (r.nextBoolean() && this.getSecondOperator() != null)
 			this.getSecondOperator().addOperationToLeaf(operationToAdd);
 		else
 			this.getFirstOperator().addOperationToLeaf(operationToAdd);
@@ -119,31 +116,31 @@ public abstract class Operation {
 	public Operation removeLeafOperation() {
 		if (this instanceof NumericValueVariable)
 			return this; // Nothing to do
-
 		boolean isFirstLeaf = isLeaf(this.getFirstOperator());
 		boolean isSecondLeaf = isLeaf(this.getSecondOperator());
+
 		// Operation shall be removed from first leaf found.
 		if (isFirstLeaf) {
-			if (this.getSecondOperator() != null) {
+			if (this.getSecondOperator() != null)
 				return this.getSecondOperator();
-			} else { // Single operator is leaf
+			else // Single operator is leaf
 				return this.getFirstOperator();
-			}
 		}
-		if (isSecondLeaf) {
+		
+		if (isSecondLeaf)
 			return this.getFirstOperator(); // Can't be null
-		}
 
 		// If none are leafs, recursive deeper call on a side.
-		if (this.getSecondOperator() != null)
+		Random r = new Random();
+		if (r.nextBoolean() && this.getSecondOperator() != null)
 			this.setSecondOperator(getSecondOperator().removeLeafOperation());
 		else
 			this.setFirstOperator(getFirstOperator().removeLeafOperation());
 
-		return this; 
+		return this;
 	}
 
-	private boolean isLeaf(Operation opToTest) {
+	protected boolean isLeaf(Operation opToTest) {
 		return (opToTest != null && opToTest instanceof NumericValueVariable);
 	}
 }
