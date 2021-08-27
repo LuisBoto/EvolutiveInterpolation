@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import interpolation.geneticAlgorithm.GeneticFunctions;
 import interpolation.geneticAlgorithm.Individual;
+import interpolation.lib.arithmetic.Multiplication;
+import interpolation.lib.arithmetic.NumericValueVariable;
 import interpolation.lib.arithmetic.Operation;
+import interpolation.lib.arithmetic.Power;
+import interpolation.lib.arithmetic.Sin;
 import junit.framework.Assert;
 
 class ArithmeticTest {
@@ -45,6 +49,34 @@ class ArithmeticTest {
 			System.out.print(initial+" -> ");
 			initial = initial.removeLeafOperation();
 			System.out.print(initial+"\n");
+		}
+	}
+	
+	@Test
+	void leafRemovalSimpleTest() {
+		Operation two = new NumericValueVariable(2, false);
+		Operation var = new NumericValueVariable(true);
+		Operation mult = new Multiplication(two, var);
+		Operation pow = new Power(new NumericValueVariable(3.065, false), mult);
+		Operation sin = new Sin(pow);
+		System.out.println(sin);
+		for (int i=0; i<4; i++) {
+			sin = sin.removeLeafOperation();
+			System.out.println(sin);
+		}
+	}
+	
+	@Test
+	void randomPointRemovalSimpleTest() {
+		Operation two = new NumericValueVariable(2, false);
+		Operation var = new NumericValueVariable(true);
+		Operation mult = new Multiplication(two, var);
+		Operation pow = new Power(new NumericValueVariable(3.065, false), mult);
+		Operation sin = new Sin(pow);
+		System.out.println(sin);
+		for (int i=0; i<4; i++) {
+			sin = sin.removeAtRandomPoint();
+			System.out.println(sin);
 		}
 	}
 

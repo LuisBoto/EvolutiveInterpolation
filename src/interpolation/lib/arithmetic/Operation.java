@@ -116,28 +116,43 @@ public abstract class Operation {
 	public Operation removeLeafOperation() {
 		if (this instanceof NumericValueVariable)
 			return this; // Nothing to do
+		Random r = new Random();
 		boolean isFirstLeaf = isLeaf(this.getFirstOperator());
 		boolean isSecondLeaf = isLeaf(this.getSecondOperator());
 
-		// Operation shall be removed from first leaf found.
-		if (isFirstLeaf) {
+		if (r.nextBoolean() && isFirstLeaf) {
 			if (this.getSecondOperator() != null)
 				return this.getSecondOperator();
 			else // Single operator is leaf
 				return this.getFirstOperator();
 		}
 		
-		if (isSecondLeaf)
+		if (r.nextBoolean() && isSecondLeaf)
 			return this.getFirstOperator(); // Can't be null
 
-		// If none are leafs, recursive deeper call on a side.
-		Random r = new Random();
+		// Recursive deeper call on a side.
 		if (r.nextBoolean() && this.getSecondOperator() != null)
 			this.setSecondOperator(getSecondOperator().removeLeafOperation());
 		else
 			this.setFirstOperator(getFirstOperator().removeLeafOperation());
 
 		return this;
+	}
+	
+	public Operation removeAtRandomPoint() {
+		if (this instanceof NumericValueVariable)
+			return this; // Nothing to do
+		Random r = new Random();
+		if (this.getFirstOperator()!= null)
+			if (r.nextBoolean())
+				return this.getFirstOperator();
+		if (this.getSecondOperator()!= null)
+			if (r.nextBoolean())
+				return this.getSecondOperator();
+		if (r.nextBoolean() && this.getSecondOperator()!=null)
+			return this.getSecondOperator().removeAtRandomPoint();
+		else
+			return this.getFirstOperator().removeAtRandomPoint();
 	}
 
 	protected boolean isLeaf(Operation opToTest) {
