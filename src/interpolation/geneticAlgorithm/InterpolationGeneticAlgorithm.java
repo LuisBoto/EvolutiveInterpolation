@@ -90,10 +90,11 @@ public class InterpolationGeneticAlgorithm {
 		List<Individual> newPopulation = new ArrayList<>(population.size());
 		for (int i = 0; i < population.size() - 1; i++) { // -1 for elitism
 			Individual x = randomSelection(population);
-			Individual y = randomSelection(population);
 			Individual child = x;
-			if (random.nextDouble() <= crossoverProbability)
+			if (random.nextDouble() <= crossoverProbability) {
+				Individual y = randomSelection(population);
 				child = this.reproduce(x, y);
+			}
 
 			if (random.nextDouble() <= mutationProbability) {
 				child = this.mutate(child);
@@ -168,13 +169,20 @@ public class InterpolationGeneticAlgorithm {
 		Operation mutatedRepresentation = child.getRepresentation();
 		int mutationType = random.nextInt(5);
 		switch (mutationType) {
-		case 0: // Remove one leaf operation
-			mutatedRepresentation = mutatedRepresentation.removeLeafOperation();
+		case 0: // Remove leaf operation or half oepration
+			if (random.nextBoolean())
+				mutatedRepresentation = mutatedRepresentation.removeLeafOperation();
+			else {
+				if (mutatedRepresentation.getSecondOperator() != null)
+					mutatedRepresentation = mutatedRepresentation.getSecondOperator();
+				else if (mutatedRepresentation.getFirstOperator() != null)
+					mutatedRepresentation = mutatedRepresentation.getFirstOperator();
+			}
 			break;
 		case 1: // Add new operation to a leaf operation
 			mutatedRepresentation.addOperationToLeaf(GeneticFunctions.getRandomOperation());
 			break;
-		case 2: // Change this Operation type
+		case 2: // Change this Operation type or use a new operation
 			Operation newOperator = GeneticFunctions.getRandomOperation();
 			if (mutatedRepresentation.getFirstOperator() != null)
 				newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
@@ -189,7 +197,8 @@ public class InterpolationGeneticAlgorithm {
 			mutatedRepresentation = GeneticFunctions.mutateOperators(mutatedRepresentation);
 			break;
 		}
-
+		if (mutatedRepresentation == null)
+			mutatedRepresentation = GeneticFunctions.getRandomOperation();
 		return new Individual(mutatedRepresentation);
 	}
 
@@ -202,7 +211,6 @@ public class InterpolationGeneticAlgorithm {
 			throw new IllegalArgumentException("Must start with at least a population of size 1");
 		}
 		for (int i = 0; i < population.size(); i++) {
-			//System.out.println(((ArrayList<Individual>) population).get(i).getRepresentation().toString());
 			((ArrayList<Individual>) population).get(i).simplifyRepresentation();
 		}
 	}
