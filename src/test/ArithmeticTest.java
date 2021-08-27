@@ -28,16 +28,22 @@ class ArithmeticTest {
 	}
 
 	@Test
-	void addingToLeafTest() {
+	void addingRemovingLeafTest() {
 		Operation initial;
 		for (int i = 0; i < 10; i++) {
 			initial = GeneticFunctions.getRandomOperation();
-			System.out.print(initial+"\t->");
+			System.out.print(initial+" -> ");
 			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
-			System.out.print(initial+"\t->");
+			System.out.print(initial+" -> ");
 			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
-			System.out.print(initial+"\t->");
+			System.out.print(initial+" -> ");
 			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
+			System.out.print(initial+" # ");
+			initial = initial.removeLeafOperation();
+			System.out.print(initial+" -> ");
+			initial = initial.removeLeafOperation();
+			System.out.print(initial+" -> ");
+			initial = initial.removeLeafOperation();
 			System.out.print(initial+"\n");
 		}
 	}

@@ -54,4 +54,9 @@ public class SquareRoot extends Operation {
 		return mutated;
 	}
 
+	@Override
+	public void setSecondOperator(Operation secondOperator) {
+		this.secondOperator = null;
+	}
+
 }

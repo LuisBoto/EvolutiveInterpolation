@@ -48,4 +48,9 @@ public class Log extends Operation {
 		}
 		return simplifiedOperation;
 	}
+	
+	@Override
+	public void setSecondOperator(Operation secondOperator) {
+		this.secondOperator = null;
+	}
 }

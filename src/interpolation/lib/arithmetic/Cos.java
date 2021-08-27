@@ -27,14 +27,14 @@ public class Cos extends Operation {
 	public Operation getSecondOperator() {
 		return null;
 	}
-	
+
 	@Override
 	public Operation mutateOperator() {
 		Operation mutated = GeneticFunctions.getRandomOperation();
 		mutated.setFirstOperator(this.getFirstOperator());
 		return mutated;
 	}
-	
+
 	@Override
 	public Operation simplify() {
 		Operation simplifiedOperation = super.simplify();
@@ -43,5 +43,10 @@ public class Cos extends Operation {
 			return new NumericValueVariable(Math.cos(value), false);
 		}
 		return simplifiedOperation;
+	}
+
+	@Override
+	public void setSecondOperator(Operation secondOperator) {
+		this.secondOperator = null;
 	}
 }

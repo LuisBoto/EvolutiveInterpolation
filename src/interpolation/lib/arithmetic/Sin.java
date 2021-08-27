@@ -44,5 +44,10 @@ public class Sin extends Operation {
 		}
 		return simplifiedOperation;
 	}
+	
+	@Override
+	public void setSecondOperator(Operation secondOperator) {
+		this.secondOperator = null;
+	}
 
 }
