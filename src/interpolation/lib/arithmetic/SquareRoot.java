@@ -20,7 +20,7 @@ public class SquareRoot extends Operation {
 
 	@Override
 	public String toString() {
-		return "√(" + firstOperator.toString() + ")";
+		return "sqrt(" + firstOperator.toString() + ")";
 	}
 
 	@Override

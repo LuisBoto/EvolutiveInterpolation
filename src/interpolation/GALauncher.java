@@ -30,20 +30,21 @@ public class GALauncher {
 		double[] pointListY = new double[10];
 		for (double i = 0; i < 10; i++) {
 			pointListX[(int) i] = i;
-			pointListY[(int) i] = Math.sin(Math.pow(i, i*3.14));
+			pointListY[(int) i] = 1 + Math.log(Math.pow(i, i * 3.14));
 		}
 		double errorMargin = 0.01;
 		int popSize = 10;
 		double crossoverProbability = 0.4;
 		double mutationProbability = 0.95;
-		int maxTime = 0; 
+		int maxTime = 0;
 		boolean saveExecutionData = false;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				maxTime, saveExecutionData);
 	}
 
 	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, double errorMargin,
-			int populationSize, double crossoverProbability, double mutationProbability, int maxTime, boolean saveExecutionData) {
+			int populationSize, double crossoverProbability, double mutationProbability, int maxTime,
+			boolean saveExecutionData) {
 
 		System.out.println("--- GeneticAlgorithm ---");
 		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin);
@@ -52,8 +53,9 @@ public class GALauncher {
 		Collection<Individual> population = new ArrayList<Individual>();
 		for (int i = 0; i < populationSize; i++)
 			population.add(GeneticFunctions.generateRandomIndividual());
-		InterpolationGeneticAlgorithm ga = new InterpolationGeneticAlgorithm(crossoverProbability, mutationProbability, maxTime);
-		
+		InterpolationGeneticAlgorithm ga = new InterpolationGeneticAlgorithm(crossoverProbability, mutationProbability,
+				maxTime);
+
 		System.out.println("Starting evolution");
 		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, saveExecutionData);
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
