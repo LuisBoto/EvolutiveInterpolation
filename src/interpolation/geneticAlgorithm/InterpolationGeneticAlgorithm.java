@@ -190,12 +190,14 @@ public class InterpolationGeneticAlgorithm {
 		case 3: // Change numeric values and variables
 			mutatedRepresentation = GeneticFunctions.mutateNumericValuesVariables(mutatedRepresentation);
 			break;
-		case 4: // Change operators while keeping numeric values & variables
+		case 4: // Change some operators randomly while keeping numeric values & variables
 			mutatedRepresentation = GeneticFunctions.mutateOperators(mutatedRepresentation);
 			break;
 		}
 		if (mutatedRepresentation == null)
 			mutatedRepresentation = GeneticFunctions.getRandomOperation();
+		if (random.nextBoolean()) // Mutate again
+			return mutate(new Individual(mutatedRepresentation));
 		return new Individual(mutatedRepresentation);
 	}
 

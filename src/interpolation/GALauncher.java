@@ -33,9 +33,9 @@ public class GALauncher {
 			pointListY[(int) i] = 1 + Math.log(Math.pow(i, i * 3.14));
 		}
 		double errorMargin = 0.01;
-		int popSize = 10;
-		double crossoverProbability = 0.4;
-		double mutationProbability = 0.95;
+		int popSize = 100;
+		double crossoverProbability = 0.6;
+		double mutationProbability = 0.9;
 		int maxTime = 0;
 		boolean saveExecutionData = false;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,

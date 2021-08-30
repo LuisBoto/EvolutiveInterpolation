@@ -17,7 +17,8 @@ public abstract class Operation {
 	public abstract double computeValue(double variableValue);
 
 	public Operation mutateOperator() {
-		if (this instanceof NumericValueVariable)
+		Random r = new Random();
+		if (this instanceof NumericValueVariable || r.nextBoolean())
 			return this;
 		Operation mutated = GeneticFunctions.getRandomOperation();
 		mutated.setFirstOperator(this.getFirstOperator());
@@ -143,13 +144,14 @@ public abstract class Operation {
 		if (this instanceof NumericValueVariable)
 			return this; // Nothing to do
 		Random r = new Random();
+		int roll = r.nextInt(3);
 		if (this.getFirstOperator()!= null)
-			if (r.nextBoolean())
+			if (roll == 0)
 				return this.getFirstOperator();
 		if (this.getSecondOperator()!= null)
-			if (r.nextBoolean())
+			if (roll == 1)
 				return this.getSecondOperator();
-		if (r.nextBoolean() && this.getSecondOperator()!=null)
+		if (roll == 2 && this.getSecondOperator()!=null)
 			return this.getSecondOperator().removeAtRandomPoint();
 		else
 			return this.getFirstOperator().removeAtRandomPoint();
