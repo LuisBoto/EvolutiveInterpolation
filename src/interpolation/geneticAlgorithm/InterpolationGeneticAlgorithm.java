@@ -55,7 +55,8 @@ public class InterpolationGeneticAlgorithm {
 			this.validatePopulation(population);
 			this.calculateFitness(population, fitnessFn);
 			this.bestIndividual = retrieveBestIndividual(population);
-			printStatus();
+			if (this.getGenerations() % 100 == 0)
+				printStatus();
 			this.generations++;
 		} while (!this.stopCondition());
 
@@ -107,17 +108,21 @@ public class InterpolationGeneticAlgorithm {
 	}
 
 	protected Individual randomSelection(List<Individual> population) {
+		if (random.nextInt(100) == 0)
+			return this.retrieveBestIndividual(population);
 		// Default result is last individual to avoid problems with rounding errors
 		Individual selected = population.get(population.size() - 1);
 
 		// Determine all of the fitness values
 		double[] fValues = new double[population.size()];
-		double minFitness = population.get(0).getFitness();
-		double maxFitness = population.get(0).getFitness();
+		double minFitness = Double.POSITIVE_INFINITY;
+		double maxFitness = 0;
 		for (int i = 0; i < population.size(); i++) {
 			fValues[i] = population.get(i).getFitness();
-			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i]))
-				fValues[i] = minFitness * minFitness; // Arbitrarily large value for special cases
+			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i])) {
+				fValues[i] = Double.NaN; // Special cases
+				continue;
+			}
 			if (minFitness > fValues[i])
 				minFitness = fValues[i];
 			if (maxFitness < fValues[i])
@@ -126,14 +131,17 @@ public class InterpolationGeneticAlgorithm {
 
 		// Fitness escalation: Every individual is subtracted lowest fitness
 		for (int i = 0; i < population.size(); i++) {
-			fValues[i] -= minFitness;
+			if (!Double.isNaN(fValues[i]))
+				fValues[i] -= minFitness;
 		}
 		maxFitness -= minFitness;
-		
+
 		// Tournament
 		double prob = random.nextDouble() * maxFitness;
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
+			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i]))
+				continue;
 			totalSoFar += maxFitness - fValues[i];
 			if (prob <= totalSoFar) {
 				selected = population.get(i);
