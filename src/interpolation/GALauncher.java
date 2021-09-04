@@ -30,13 +30,13 @@ public class GALauncher {
 		double[] pointListY = new double[10];
 		for (double i = 0; i < 10; i++) {
 			pointListX[(int) i] = i;
-			pointListY[(int) i] = -1 * Math.log(Math.pow(i, i * 3.14));
+			pointListY[(int) i] = 1 + Math.log(Math.pow(i, i * 3.14));
 		}
 		double errorMargin = 0.01;
 		int popSize = 500;
-		double crossoverProbability = 0.9;
-		double mutationProbability = 0.4;
-		int maxTime = 0;
+		double crossoverProbability = 0.8;
+		double mutationProbability = 0.7;
+		int maxTime = 100*1000;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				maxTime, allowMultipleMutations);
