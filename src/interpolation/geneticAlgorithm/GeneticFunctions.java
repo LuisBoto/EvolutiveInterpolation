@@ -200,7 +200,7 @@ public class GeneticFunctions {
 			double length = representation.getLength();
 			// pointShape weights 3 times more than basic error
 			double fitness = (totalError * (pointShapeError * 3.0));// * (size - landedPoints);
-			return fitness * (1.0 + length / 10.0); // Less fitness value is better
+			return fitness * (1.0 + length / 5.0); // Less fitness value is better
 		}
 	}
 

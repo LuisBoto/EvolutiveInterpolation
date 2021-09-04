@@ -114,23 +114,31 @@ public class InterpolationGeneticAlgorithm {
 		// Determine all of the fitness values
 		double[] fValues = new double[population.size()];
 		double minFitness = population.get(0).getFitness();
+		double maxFitness = population.get(0).getFitness();
 		for (int i = 0; i < population.size(); i++) {
 			fValues[i] = population.get(i).getFitness();
+			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i]))
+				fValues[i] = minFitness * minFitness; // Arbitrarily large value for special cases
 			if (minFitness > fValues[i])
 				minFitness = fValues[i];
+			if (maxFitness < fValues[i])
+				maxFitness = fValues[i];
 		}
 
-		// Fitness scalation: Every individual is sustracted lowest fitness
+		// Fitness escalation: Every individual is subtracted lowest fitness
 		for (int i = 0; i < population.size(); i++) {
 			fValues[i] -= minFitness;
 		}
-		fValues = Util.normalize(fValues);
+		//if (this.getGenerations() > 100)
+			//System.out.print("Stopping");
+		// fValues = Util.normalize(fValues);
 
+		maxFitness -= minFitness;
 		// Tournament
-		double prob = random.nextDouble();
+		double prob = random.nextDouble() * maxFitness;
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
-			totalSoFar += 1 - fValues[i];
+			totalSoFar += maxFitness - fValues[i];
 			if (prob <= totalSoFar) {
 				selected = population.get(i);
 				break;
