@@ -37,14 +37,14 @@ public class GALauncher {
 		double crossoverProbability = 0.6;
 		double mutationProbability = 0.9;
 		int maxTime = 0;
-		boolean saveExecutionData = false;
+		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
-				maxTime, saveExecutionData);
+				maxTime, allowMultipleMutations);
 	}
 
 	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, double errorMargin,
 			int populationSize, double crossoverProbability, double mutationProbability, int maxTime,
-			boolean saveExecutionData) {
+			boolean allowMultipleMutations) {
 
 		System.out.println("--- GeneticAlgorithm ---");
 		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin);
@@ -57,7 +57,7 @@ public class GALauncher {
 				maxTime);
 
 		System.out.println("Starting evolution");
-		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, saveExecutionData);
+		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, allowMultipleMutations);
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
 		System.out.println("Fitness = " + fitnessFunction.apply(bestIndividual));
 		System.out.println("Population Size = " + populationSize);

@@ -17,6 +17,7 @@ public class InterpolationGeneticAlgorithm {
 	private Individual bestIndividual;
 	private double startTime;
 	private int generations;
+	private boolean allowMultipleMutations;
 
 	public InterpolationGeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime) {
 		this.crossoverProbability = crossoverProbability;
@@ -39,7 +40,8 @@ public class InterpolationGeneticAlgorithm {
 	}
 
 	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn,
-			boolean saveExecutionData) {
+			boolean allowMultipleMutations) {
+		this.allowMultipleMutations = allowMultipleMutations;
 		// Create a local copy of the population to work with
 		List<Individual> population = new ArrayList<>(initPopulation);
 		validatePopulation(population);
@@ -124,6 +126,7 @@ public class InterpolationGeneticAlgorithm {
 		}
 		fValues = Util.normalize(fValues);
 
+		// Tournament
 		double prob = random.nextDouble();
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
@@ -194,10 +197,12 @@ public class InterpolationGeneticAlgorithm {
 			mutatedRepresentation = GeneticFunctions.mutateOperators(mutatedRepresentation);
 			break;
 		}
-		if (mutatedRepresentation == null)
+		if (mutatedRepresentation == null) // Failsafe in case mutations mess individual
 			mutatedRepresentation = GeneticFunctions.getRandomOperation();
-		if (random.nextBoolean()) // Mutate again
-			return mutate(new Individual(mutatedRepresentation));
+
+		if (this.allowMultipleMutations && random.nextBoolean()) // Allows multiple mutations to happen return
+			mutate(new Individual(mutatedRepresentation));
+
 		return new Individual(mutatedRepresentation);
 	}
 

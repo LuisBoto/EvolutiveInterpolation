@@ -1,5 +1,7 @@
 package test;
 
+import java.util.Random;
+
 import org.junit.jupiter.api.Test;
 
 import interpolation.geneticAlgorithm.GeneticFunctions;
@@ -36,22 +38,22 @@ class ArithmeticTest {
 		Operation initial;
 		for (int i = 0; i < 10; i++) {
 			initial = GeneticFunctions.getRandomOperation();
-			System.out.print(initial+" -> ");
+			System.out.print(initial + " -> ");
 			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
-			System.out.print(initial+" -> ");
+			System.out.print(initial + " -> ");
 			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
-			System.out.print(initial+" -> ");
+			System.out.print(initial + " -> ");
 			initial.addOperationToLeaf(GeneticFunctions.getRandomOperation());
-			System.out.print(initial+" # ");
+			System.out.print(initial + " # ");
 			initial = initial.removeLeafOperation();
-			System.out.print(initial+" -> ");
+			System.out.print(initial + " -> ");
 			initial = initial.removeLeafOperation();
-			System.out.print(initial+" -> ");
+			System.out.print(initial + " -> ");
 			initial = initial.removeLeafOperation();
-			System.out.print(initial+"\n");
+			System.out.print(initial + "\n");
 		}
 	}
-	
+
 	@Test
 	void leafRemovalSimpleTest() {
 		Operation two = new NumericValueVariable(2, false);
@@ -60,12 +62,12 @@ class ArithmeticTest {
 		Operation pow = new Power(new NumericValueVariable(3.065, false), mult);
 		Operation sin = new Sin(pow);
 		System.out.println(sin);
-		for (int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			sin = sin.removeLeafOperation();
 			System.out.println(sin);
 		}
 	}
-	
+
 	@Test
 	void randomPointRemovalSimpleTest() {
 		Operation two = new NumericValueVariable(2, false);
@@ -74,10 +76,56 @@ class ArithmeticTest {
 		Operation pow = new Power(new NumericValueVariable(3.065, false), mult);
 		Operation sin = new Sin(pow);
 		System.out.println(sin);
-		for (int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			sin = sin.removeAtRandomPoint();
 			System.out.println(sin);
 		}
+	}
+
+	@Test
+	void mutateIndividualTest() {
+		Individual mutant = new Individual(GeneticFunctions.getRandomOperation());
+		for (int i = 0; i < 50; i++) {
+			System.out.print(mutant.getRepresentation() + " \n ");
+			mutant = mutate(mutant);
+		}
+	}
+
+	private static Individual mutate(Individual child) {
+		Random random = new Random();
+		Operation mutatedRepresentation = child.getRepresentation();
+		int mutationType = random.nextInt(5);
+		switch (mutationType) {
+		case 0: // Remove leaf operation or half operation
+			if (random.nextBoolean())
+				mutatedRepresentation = mutatedRepresentation.removeLeafOperation();
+			else {
+				mutatedRepresentation = mutatedRepresentation.removeAtRandomPoint();
+			}
+			break;
+		case 1: // Add new operation to a leaf operation
+			mutatedRepresentation.addOperationToLeaf(GeneticFunctions.getRandomOperation());
+			break;
+		case 2: // Change this Operation type or use a new operation
+			Operation newOperator = GeneticFunctions.getRandomOperation();
+			if (mutatedRepresentation.getFirstOperator() != null)
+				newOperator.setFirstOperator(mutatedRepresentation.getFirstOperator());
+			if (mutatedRepresentation.getSecondOperator() != null)
+				newOperator.setSecondOperator(mutatedRepresentation.getSecondOperator());
+			mutatedRepresentation = newOperator;
+			break;
+		case 3: // Change numeric values and variables
+			mutatedRepresentation = GeneticFunctions.mutateNumericValuesVariables(mutatedRepresentation);
+			break;
+		case 4: // Change some operators randomly while keeping numeric values & variables
+			mutatedRepresentation = GeneticFunctions.mutateOperators(mutatedRepresentation);
+			break;
+		}
+		if (mutatedRepresentation == null)
+			mutatedRepresentation = GeneticFunctions.getRandomOperation();
+		// if (random.nextBoolean()) // Mutate again
+		// return mutate(new Individual(mutatedRepresentation));
+		return new Individual(mutatedRepresentation);
 	}
 
 }
