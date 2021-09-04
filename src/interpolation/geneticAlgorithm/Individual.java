@@ -1,6 +1,6 @@
 package interpolation.geneticAlgorithm;
 
-import interpolation.lib.arithmetic.Operation;
+import interpolation.arithmetic.Operation;
 
 public class Individual {
 	private Operation representation;

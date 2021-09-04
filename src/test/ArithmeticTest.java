@@ -4,16 +4,20 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import interpolation.arithmetic.Multiplication;
+import interpolation.arithmetic.NumericValueVariable;
+import interpolation.arithmetic.Operation;
+import interpolation.arithmetic.Power;
+import interpolation.arithmetic.Sin;
 import interpolation.geneticAlgorithm.GeneticFunctions;
 import interpolation.geneticAlgorithm.Individual;
-import interpolation.lib.arithmetic.Multiplication;
-import interpolation.lib.arithmetic.NumericValueVariable;
-import interpolation.lib.arithmetic.Operation;
-import interpolation.lib.arithmetic.Power;
-import interpolation.lib.arithmetic.Sin;
 import junit.framework.Assert;
 
+@SuppressWarnings("deprecation")
 class ArithmeticTest {
+	
+	// Please note these are ad-hoc tests made on the fly to assist development of several features.
+	// Do not interpret these as proper functionality testing or expected behaviour.
 
 	@Test
 	void simplificationTest() {

@@ -1,4 +1,4 @@
-package interpolation.lib.arithmetic;
+package interpolation.arithmetic;
 
 public class Power extends Operation {
 
@@ -32,7 +32,7 @@ public class Power extends Operation {
 		}
 		if (super.isZero(this.getFirstOperator()) || super.isZero(this.getSecondOperator())) {
 			if (super.isZero(this.getFirstOperator()) && super.isZero(this.getSecondOperator()))
-				return new NumericValueVariable(1, false); // Interpreting 0‚Å∞ as equal to 1 for now
+				return new NumericValueVariable(1, false); // Interpreting 0‚?∞ as equal to 1 for now
 			if (super.isZero(this.getFirstOperator())) // Zero to some power
 				return new NumericValueVariable(0, false);
 			if (super.isZero(this.getSecondOperator())) // Something to the power of zero

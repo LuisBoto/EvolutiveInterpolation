@@ -1,19 +1,19 @@
-package interpolation.lib.arithmetic;
+package interpolation.arithmetic;
 
-public class Addition extends Operation {
+public class Division extends Operation {
 
-	public Addition(Operation firstOperator, Operation secondOperator) {
+	public Division(Operation firstOperator, Operation secondOperator) {
 		super(firstOperator, secondOperator);
 	}
 
 	@Override
 	public double computeValue(double variableValue) {
-		return firstOperator.computeValue(variableValue) + secondOperator.computeValue(variableValue);
+		return firstOperator.computeValue(variableValue) / secondOperator.computeValue(variableValue);
 	}
 
 	@Override
 	public String toString() {
-		return firstOperator.toString() + " + " + secondOperator.toString();
+		return "((" + firstOperator.toString() + ") / (" + secondOperator.toString() + "))";
 	}
 
 	@Override
@@ -27,19 +27,21 @@ public class Addition extends Operation {
 			// Both operators are numeric values
 			double value1 = ((NumericValueVariable) this.getFirstOperator()).getValue();
 			double value2 = ((NumericValueVariable) this.getSecondOperator()).getValue();
-			return new NumericValueVariable(value1 + value2, false);
+			return new NumericValueVariable(value1 / value2, false);
 		}
 		if (super.isZero(this.getFirstOperator()) || super.isZero(this.getSecondOperator())) {
-			// Case where both are 0 handled above as 0+0 returns 0
 			if (super.isZero(this.getFirstOperator()))
-				return this.getSecondOperator();
+				return new NumericValueVariable(0, false);
 			if (super.isZero(this.getSecondOperator()))
-				return this.getFirstOperator();
+				return new NumericValueVariable(Double.POSITIVE_INFINITY, false); // infinite
 		}
 		if (this.getFirstOperator().toString().equals(this.getSecondOperator().toString())) {
-			// Both operators encode the same arithmetic operation (ex: x/2 + x/2 turns into 2*x/2)
-			return new Multiplication(new NumericValueVariable(2, false), this.getFirstOperator());
+			// Both operators encode the same arithmetic operation (ex: x/x turns into 1)
+			return new NumericValueVariable(1, false);
 		}
+		if (isVariableValue(this.getSecondOperator())
+				&& ((NumericValueVariable) this.getSecondOperator()).getValue() == 1)
+			return this.getFirstOperator();
 		return simplifiedOperation;
 	}
 

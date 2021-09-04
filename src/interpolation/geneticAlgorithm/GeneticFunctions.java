@@ -2,18 +2,18 @@ package interpolation.geneticAlgorithm;
 
 import java.util.Random;
 
-import interpolation.lib.arithmetic.Addition;
-import interpolation.lib.arithmetic.Cos;
-import interpolation.lib.arithmetic.Division;
-import interpolation.lib.arithmetic.Log;
-import interpolation.lib.arithmetic.Multiplication;
-import interpolation.lib.arithmetic.NumericValueVariable;
-import interpolation.lib.arithmetic.Operation;
-import interpolation.lib.arithmetic.Power;
-import interpolation.lib.arithmetic.Sin;
-import interpolation.lib.arithmetic.SquareRoot;
-import interpolation.lib.arithmetic.Subtraction;
-import interpolation.lib.arithmetic.Tan;
+import interpolation.arithmetic.Addition;
+import interpolation.arithmetic.Cos;
+import interpolation.arithmetic.Division;
+import interpolation.arithmetic.Log;
+import interpolation.arithmetic.Multiplication;
+import interpolation.arithmetic.NumericValueVariable;
+import interpolation.arithmetic.Operation;
+import interpolation.arithmetic.Power;
+import interpolation.arithmetic.Sin;
+import interpolation.arithmetic.SquareRoot;
+import interpolation.arithmetic.Subtraction;
+import interpolation.arithmetic.Tan;
 
 public class GeneticFunctions {
 
@@ -198,9 +198,11 @@ public class GeneticFunctions {
 			}
 
 			double length = representation.getLength();
-			// pointShape weights 3 times more than basic error
-			double fitness = (totalError * (pointShapeError * 3.0));// * (size - landedPoints);
-			return fitness * (1.0 + length / 5.0); // Less fitness value is better
+			// pointShape weights 3 times more than basic error importance-wise
+			double fitness = (totalError * (pointShapeError * 3.0)); // * (size - landedPoints);
+			// Less fitness value is better
+			return fitness * (1.0 + length / 5.0); // To encourage shorter equations, each additional
+													// length piece represents +20% fitness increment
 		}
 	}
 

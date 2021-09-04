@@ -5,8 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import interpolation.lib.Util;
-import interpolation.lib.arithmetic.Operation;
+import interpolation.arithmetic.Operation;
 
 public class InterpolationGeneticAlgorithm {
 
@@ -129,11 +128,8 @@ public class InterpolationGeneticAlgorithm {
 		for (int i = 0; i < population.size(); i++) {
 			fValues[i] -= minFitness;
 		}
-		//if (this.getGenerations() > 100)
-			//System.out.print("Stopping");
-		// fValues = Util.normalize(fValues);
-
 		maxFitness -= minFitness;
+		
 		// Tournament
 		double prob = random.nextDouble() * maxFitness;
 		double totalSoFar = 0.0;

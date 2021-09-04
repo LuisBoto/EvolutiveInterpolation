@@ -1,21 +1,23 @@
-package interpolation.lib.arithmetic;
+package interpolation.arithmetic;
+
+import javax.management.remote.SubjectDelegationPermission;
 
 import interpolation.geneticAlgorithm.GeneticFunctions;
 
-public class Sin extends Operation {
+public class Log extends Operation {
 
-	public Sin(Operation firstOperator) {
+	public Log(Operation firstOperator) {
 		super(firstOperator, null);
 	}
 
 	@Override
 	public double computeValue(double variableValue) {
-		return Math.sin(firstOperator.computeValue(variableValue));
+		return Math.log(firstOperator.computeValue(variableValue));
 	}
 
 	@Override
 	public String toString() {
-		return "sin(" + firstOperator.toString() + ")";
+		return "log(" + firstOperator.toString() + ")";
 	}
 
 	@Override
@@ -38,9 +40,11 @@ public class Sin extends Operation {
 	@Override
 	public Operation simplify() {
 		Operation simplifiedOperation = super.simplify();
+		if (super.isZeroOrNegative(this.getFirstOperator()))
+			return new NumericValueVariable(0, false);
 		if (this.getFirstOperator() instanceof NumericValueVariable) {
 			double value = ((NumericValueVariable) getFirstOperator()).getValue();
-			return new NumericValueVariable(Math.sin(value), false);
+			return new NumericValueVariable(Math.log(value), false);
 		}
 		return simplifiedOperation;
 	}
@@ -49,5 +53,4 @@ public class Sin extends Operation {
 	public void setSecondOperator(Operation secondOperator) {
 		this.secondOperator = null;
 	}
-
 }

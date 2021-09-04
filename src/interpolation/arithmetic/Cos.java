@@ -1,4 +1,4 @@
-package interpolation.lib.arithmetic;
+package interpolation.arithmetic;
 
 import interpolation.geneticAlgorithm.GeneticFunctions;
 
