@@ -55,7 +55,7 @@ public class InterpolationGeneticAlgorithm {
 			this.validatePopulation(population);
 			this.calculateFitness(population, fitnessFn);
 			this.bestIndividual = retrieveBestIndividual(population);
-			if (this.getGenerations() % 100 == 0)
+			//if (this.getGenerations() % 100 == 0)
 				printStatus();
 			this.generations++;
 		} while (!this.stopCondition());

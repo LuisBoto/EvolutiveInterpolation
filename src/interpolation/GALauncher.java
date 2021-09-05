@@ -28,15 +28,17 @@ public class GALauncher {
 
 		double[] pointListX = new double[10];
 		double[] pointListY = new double[10];
+		double j=0;
 		for (double i = 0; i < 10; i++) {
-			pointListX[(int) i] = i;
-			pointListY[(int) i] = 1 + Math.log(Math.pow(i, i * 3.14));
+			pointListX[(int) i] = j;
+			pointListY[(int) i] = j / Math.log(3.14) * Math.tan(Math.sqrt(Math.pow(j, -2 * j))) + j / 20 + Math.cos(j);
+			j+=0.5;
 		}
-		double errorMargin = 0.01;
-		int popSize = 500;
-		double crossoverProbability = 0.9;
-		double mutationProbability = 0.7;
-		int maxTime = 100*1000;
+		double errorMargin = 0.1;
+		int popSize = 400;
+		double crossoverProbability = 0.85;
+		double mutationProbability = 0.5;
+		int maxTime = 0;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				maxTime, allowMultipleMutations);

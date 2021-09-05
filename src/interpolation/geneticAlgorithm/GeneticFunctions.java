@@ -201,8 +201,8 @@ public class GeneticFunctions {
 			// pointShape weights 3 times more than basic error importance-wise
 			double fitness = (totalError + (pointShapeError * 3.0)); // * (size - landedPoints);
 			// Less fitness value is better
-			return fitness * (1.0 + length / 10.0); // To encourage shorter equations, each additional
-													// length piece represents +10% fitness increment
+			return fitness * (1.0 + length / 20.0); // To encourage shorter equations, each additional
+													// length piece represents +5% fitness increment
 		}
 	}
 
