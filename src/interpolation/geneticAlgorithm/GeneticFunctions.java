@@ -148,8 +148,8 @@ public class GeneticFunctions {
 	}
 
 	public static InterpolationFitnessFunction getFitnessFunction(double[] pointsX, double[] pointsY,
-			double errorMargin) {
-		return new InterpolationFitnessFunction(pointsX, pointsY, errorMargin);
+			double errorMargin, double lengthPenalty) {
+		return new InterpolationFitnessFunction(pointsX, pointsY, errorMargin, lengthPenalty);
 	}
 
 	public static class InterpolationFitnessFunction implements FitnessFunction {
@@ -157,11 +157,14 @@ public class GeneticFunctions {
 		private double[] pointListX;
 		private double[] pointListY;
 		private double errorMargin;
+		private double lengthPenalty;
 
-		public InterpolationFitnessFunction(double[] pointsX, double[] pointsY, double errorMargin) {
+		public InterpolationFitnessFunction(double[] pointsX, double[] pointsY, double errorMargin,
+				double lengthPenalty) {
 			this.pointListX = pointsX;
 			this.pointListY = pointsY;
 			this.errorMargin = errorMargin;
+			this.lengthPenalty = lengthPenalty;
 		}
 
 		public double apply(Individual individual) {
@@ -201,8 +204,8 @@ public class GeneticFunctions {
 			// pointShape weights 3 times more than basic error importance-wise
 			double fitness = (totalError + (pointShapeError * 3.0)); // * (size - landedPoints);
 			// Less fitness value is better
-			return fitness * (1.0 + length / 20.0); // To encourage shorter equations, each additional
-													// length piece represents +5% fitness increment
+			return fitness * (1.0 + length * lengthPenalty); // To encourage shorter equations, each additional length
+																// piece represents a certain % fitness increment
 		}
 	}
 

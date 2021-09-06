@@ -39,17 +39,18 @@ public class GALauncher {
 		double crossoverProbability = 0.85;
 		double mutationProbability = 0.5;
 		int maxTime = 0;
+		double lengthPenalty = 0.10;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
-				maxTime, allowMultipleMutations);
+				lengthPenalty, allowMultipleMutations, maxTime);
 	}
 
 	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, double errorMargin,
-			int populationSize, double crossoverProbability, double mutationProbability, int maxTime,
-			boolean allowMultipleMutations) {
+			int populationSize, double crossoverProbability, double mutationProbability, double lengthPenalty,
+			boolean allowMultipleMutations, int maxTime) {
 
-		System.out.println("--- GeneticAlgorithm ---");
-		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin);
+		System.out.println("--- Running Genetic Algorithm ---");
+		FitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin, lengthPenalty);
 
 		// Generate an initial population
 		Collection<Individual> population = new ArrayList<Individual>();
