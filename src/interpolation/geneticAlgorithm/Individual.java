@@ -11,7 +11,7 @@ public class Individual {
 	}
 
 	public Operation getRepresentation() {
-		// Representation needs to return a copy and not the actual representation,
+		// Representation needs to return a deep copy and not the actual representation,
 		// since otherwise new individuals which mutate from an original individual will
 		// modify the original individual's representation along the way, due to the
 		// nature of the Operation class.
