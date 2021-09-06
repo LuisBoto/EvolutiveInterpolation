@@ -40,7 +40,7 @@ public class InterpolationGeneticAlgorithm {
 		return System.currentTimeMillis() - this.startTime;
 	}
 
-	public Individual geneticAlgorithm(Collection<Individual> initPopulation, FitnessFunction fitnessFn,
+	public Individual geneticAlgorithm(Collection<Individual> initPopulation, InterpolationFitnessFunction fitnessFn,
 			boolean allowMultipleMutations) {
 		this.allowMultipleMutations = allowMultipleMutations;
 		// Create a local copy of the population to work with
@@ -92,7 +92,7 @@ public class InterpolationGeneticAlgorithm {
 		return bestIndividual;
 	}
 
-	protected void calculateFitness(Collection<Individual> population, FitnessFunction fitnessFn) {
+	protected void calculateFitness(Collection<Individual> population, InterpolationFitnessFunction fitnessFn) {
 		for (Individual individual : population)
 			individual.setFitness(fitnessFn.apply(individual));
 	}
