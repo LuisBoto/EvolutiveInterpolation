@@ -34,12 +34,12 @@ public class GALauncher {
 			pointListY[(int) i] = j / Math.log(3.14) * Math.tan(Math.sqrt(Math.pow(j, -2 * j))) + j / 20 + Math.cos(j);
 			j+=0.5;
 		}
-		double errorMargin = 0.1;
-		int popSize = 100;
+		double errorMargin = 0.01;
+		int popSize = 600;
 		double crossoverProbability = 0.85;
 		double mutationProbability = 0.5;
 		int maxTime = 0;
-		double lengthPenalty = 0.1;
+		double lengthPenalty = 0.2;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				lengthPenalty, allowMultipleMutations, maxTime);

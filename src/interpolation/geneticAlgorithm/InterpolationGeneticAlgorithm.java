@@ -120,46 +120,30 @@ public class InterpolationGeneticAlgorithm {
 		// Default result is first individual to avoid problems with rounding errors
 		Individual selected = population.get(0);
 
-		// Determine all of the fitness values
-		double[] fValues = new double[population.size()];
-		double minFitness = Double.POSITIVE_INFINITY;
-		double maxFitness = 0;
-		double totalFitness = 0;
-		for (int i = 0; i < population.size(); i++) {
-			fValues[i] = population.get(i).getFitness();
-			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i])) {
-				fValues[i] = Double.NaN; // Special cases
-				continue;
-			}
-			if (minFitness > fValues[i])
-				minFitness = fValues[i];
-			if (maxFitness < fValues[i])
-				maxFitness = fValues[i];
+		// Tournament works as follows, given 'population' parameter is a sorted list:
+		// 15% chance to select best individual
+		// 50% chance to select random individual on first 1/3 of population
+		// 20% chance to select individual between position 1/3 and 1/2
+		// 15% to select individual on second half of the population
+		int roll = random.nextInt(100);
+		int index;
+		if (roll < 15) { // 15%
+			return population.get(0);
 		}
-
-		// Fitness escalation: Every individual is subtracted lowest fitness
-		for (int i = 0; i < population.size(); i++) {
-			if (!Double.isInfinite(fValues[i]) && !Double.isNaN(fValues[i])) {
-				fValues[i] -= minFitness;
-				if (!Double.isInfinite(totalFitness + fValues[i]))
-					totalFitness += fValues[i];
-			}
+		if (roll < 65) { // 50%
+			index = random.nextInt(population.size() / 3) + 1;
+			return population.get(index);
 		}
-		maxFitness -= minFitness;
-
-		// Tournament
-		double prob = random.nextDouble() * totalFitness;
-		double totalSoFar = 0.0;
-		for (int i = 0; i < fValues.length; i++) {
-			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i]))
-				continue;
-			totalSoFar += (maxFitness - fValues[i]);
-			if (prob <= totalSoFar) {
-				selected = population.get(i);
-				break;
-			}
+		if (roll < 85) { // 20%
+			index = random.nextInt(population.size() / 5) + population.size() / 3;
+			return population.get(index);
 		}
-		// System.out.print(selected.getFitness() + " ");
+		if (roll < 100) { // 15%
+			index = random.nextInt(population.size() / 5) + population.size()/5;
+			return population.get(index);
+		}
+		
+		// Failsafe
 		return selected;
 	}
 
