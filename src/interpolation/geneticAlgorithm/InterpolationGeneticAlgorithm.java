@@ -2,6 +2,8 @@ package interpolation.geneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -49,14 +51,21 @@ public class InterpolationGeneticAlgorithm {
 		this.bestIndividual = retrieveBestIndividual(initPopulation);
 		this.startTime = System.currentTimeMillis();
 		this.generations = 0;
+		Comparator<Individual> individualComparator = new Comparator<Individual>() {
+			@Override
+			public int compare(Individual indiv1, Individual indiv2) {
+				return Double.compare(indiv1.getFitness(), indiv2.getFitness());
+			}
+		};
 
 		do {
+			Collections.sort(population, individualComparator);
 			population = nextGeneration(population, bestIndividual);
 			this.validatePopulation(population);
 			this.calculateFitness(population, fitnessFn);
 			this.bestIndividual = retrieveBestIndividual(population);
-			//if (this.getGenerations() % 100 == 0)
-				printStatus();
+			// if (this.getGenerations() % 100 == 0)
+			printStatus();
 			this.generations++;
 		} while (!this.stopCondition());
 
@@ -108,15 +117,14 @@ public class InterpolationGeneticAlgorithm {
 	}
 
 	protected Individual randomSelection(List<Individual> population) {
-		if (random.nextInt(100) == 0)
-			return this.retrieveBestIndividual(population);
-		// Default result is last individual to avoid problems with rounding errors
-		Individual selected = population.get(population.size() - 1);
+		// Default result is first individual to avoid problems with rounding errors
+		Individual selected = population.get(0);
 
 		// Determine all of the fitness values
 		double[] fValues = new double[population.size()];
 		double minFitness = Double.POSITIVE_INFINITY;
 		double maxFitness = 0;
+		double totalFitness = 0;
 		for (int i = 0; i < population.size(); i++) {
 			fValues[i] = population.get(i).getFitness();
 			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i])) {
@@ -131,24 +139,27 @@ public class InterpolationGeneticAlgorithm {
 
 		// Fitness escalation: Every individual is subtracted lowest fitness
 		for (int i = 0; i < population.size(); i++) {
-			if (!Double.isNaN(fValues[i]))
+			if (!Double.isInfinite(fValues[i]) && !Double.isNaN(fValues[i])) {
 				fValues[i] -= minFitness;
+				if (!Double.isInfinite(totalFitness + fValues[i]))
+					totalFitness += fValues[i];
+			}
 		}
 		maxFitness -= minFitness;
 
 		// Tournament
-		double prob = random.nextDouble() * maxFitness;
+		double prob = random.nextDouble() * totalFitness;
 		double totalSoFar = 0.0;
 		for (int i = 0; i < fValues.length; i++) {
 			if (Double.isInfinite(fValues[i]) || Double.isNaN(fValues[i]))
 				continue;
-			totalSoFar += maxFitness - fValues[i];
+			totalSoFar += (maxFitness - fValues[i]);
 			if (prob <= totalSoFar) {
 				selected = population.get(i);
 				break;
 			}
 		}
-
+		// System.out.print(selected.getFitness() + " ");
 		return selected;
 	}
 

@@ -35,11 +35,11 @@ public class GALauncher {
 			j+=0.5;
 		}
 		double errorMargin = 0.1;
-		int popSize = 400;
+		int popSize = 100;
 		double crossoverProbability = 0.85;
 		double mutationProbability = 0.5;
 		int maxTime = 0;
-		double lengthPenalty = 0.10;
+		double lengthPenalty = 0.1;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				lengthPenalty, allowMultipleMutations, maxTime);
