@@ -26,20 +26,20 @@ public class GALauncher {
 		 * Integer.parseInt(args[6]) * 1000;
 		 */
 
-		double[] pointListX = new double[50];
-		double[] pointListY = new double[50];
-		double j=0;
-		for (double i = 0; i < 50; i++) {
+		double[] pointListX = new double[100];
+		double[] pointListY = new double[100];
+		double j = 0;
+		for (double i = 0; i < 100; i++) {
 			pointListX[(int) i] = j;
 			pointListY[(int) i] = j / Math.log(3.14) * Math.tan(Math.sqrt(Math.pow(j, -2 * j))) + j / 20 + Math.cos(j);
-			j+=0.1;
+			j += 0.1;
 		}
 		double errorMargin = 0.01;
-		int popSize = 500;
-		double crossoverProbability = 0.85;
-		double mutationProbability = 0.6;
+		int popSize = 400;
+		double crossoverProbability = 0.60;
+		double mutationProbability = 0.85;
 		int maxTime = 0;
-		double lengthPenalty = 0.1;
+		double lengthPenalty = 0.35;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				lengthPenalty, allowMultipleMutations, maxTime);
@@ -50,7 +50,8 @@ public class GALauncher {
 			boolean allowMultipleMutations, int maxTime) {
 
 		System.out.println("--- Running Genetic Algorithm ---");
-		InterpolationFitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY, errorMargin, lengthPenalty);
+		InterpolationFitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY,
+				errorMargin, lengthPenalty);
 
 		// Generate an initial population
 		Collection<Individual> population = new ArrayList<Individual>();
@@ -62,7 +63,16 @@ public class GALauncher {
 		System.out.println("Starting evolution");
 		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, allowMultipleMutations);
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
-		System.out.println("Fitness = " + fitnessFunction.apply(bestIndividual));
+		String pointsOg = "Originals = ";
+		for (int i = 0; i < pointListX.length; i++) {
+			pointsOg += pointListY[i] + " ; ";
+		}
+		System.out.println(pointsOg);
+		String points = "Points = ";
+		for (int i = 0; i < pointListX.length; i++) {
+			points += bestIndividual.getRepresentation().computeValue(pointListX[i]) + " ; ";
+		}
+		System.out.println(points);
 		System.out.println("Population Size = " + populationSize);
 		System.out.println("Iterations = " + ga.getGenerations());
 		System.out.println("Took = " + ga.getRunningTimeInMilliseconds() + "ms.");
