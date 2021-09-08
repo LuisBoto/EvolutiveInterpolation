@@ -26,20 +26,20 @@ public class GALauncher {
 		 * Integer.parseInt(args[6]) * 1000;
 		 */
 
-		double[] pointListX = new double[100];
-		double[] pointListY = new double[100];
+		double[] pointListX = new double[150];
+		double[] pointListY = new double[150];
 		double j = 0;
-		for (double i = 0; i < 100; i++) {
+		for (double i = 0; i < 150; i++) {
 			pointListX[(int) i] = j;
-			pointListY[(int) i] = j / Math.log(3.14) * Math.tan(Math.sqrt(Math.pow(j, -2 * j))) + j / 20 + Math.cos(j);
+			pointListY[(int) i] = (j / Math.pow(3.14, -j)) * Math.tan(Math.sqrt(Math.pow(j, -2.0 * j))) + (j / 20.0) + Math.cos(j);
 			j += 0.1;
 		}
 		double errorMargin = 0.01;
-		int popSize = 400;
-		double crossoverProbability = 0.60;
-		double mutationProbability = 0.85;
-		int maxTime = 0;
-		double lengthPenalty = 0.35;
+		int popSize = 2500;
+		double crossoverProbability = 0.70;
+		double mutationProbability = 0.95;
+		int maxTime = 0*1000;
+		double lengthPenalty = 0.1;
 		boolean allowMultipleMutations = true;
 		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
 				lengthPenalty, allowMultipleMutations, maxTime);
@@ -72,6 +72,7 @@ public class GALauncher {
 		for (int i = 0; i < pointListX.length; i++) {
 			points += bestIndividual.getRepresentation().computeValue(pointListX[i]) + " ; ";
 		}
+		// fitnessFunction.apply(bestIndividual);
 		System.out.println(points);
 		System.out.println("Population Size = " + populationSize);
 		System.out.println("Iterations = " + ga.getGenerations());

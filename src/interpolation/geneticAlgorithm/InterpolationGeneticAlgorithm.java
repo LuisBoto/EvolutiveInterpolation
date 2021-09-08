@@ -121,16 +121,16 @@ public class InterpolationGeneticAlgorithm {
 		Individual selected = population.get(0);
 
 		// Tournament works as follows, given 'population' parameter is a sorted list:
-		// 15% chance to select best individual
-		// 50% chance to select random individual on first 1/3 of population
+		// 5% chance to select best individual
+		// 60% chance to select random individual on first 1/3 of population
 		// 20% chance to select individual between position 1/3 and 1/2
 		// 15% to select individual on second half of the population
 		int roll = random.nextInt(100);
 		int index;
-		if (roll < 15) { // 15%
+		if (roll < 5) { // 5% to return best individual
 			return population.get(0);
 		}
-		if (roll < 65) { // 50%
+		if (roll < 75) { // 60%
 			index = random.nextInt(population.size() / 3) + 1;
 			return population.get(index);
 		}

@@ -75,8 +75,7 @@ public abstract class Operation {
 	protected boolean isZero(Operation value) {
 		if (value instanceof NumericValueVariable)
 			if (!((NumericValueVariable) value).isVariable())
-				return ((NumericValueVariable) value).getValue() <= 0.00001
-						&& ((NumericValueVariable) value).getValue() >= 0;
+				return ((NumericValueVariable) value).getValue() == 0;
 		return false;
 	}
 

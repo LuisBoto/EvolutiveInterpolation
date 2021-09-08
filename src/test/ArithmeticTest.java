@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import interpolation.arithmetic.Addition;
 import interpolation.arithmetic.Multiplication;
 import interpolation.arithmetic.NumericValueVariable;
 import interpolation.arithmetic.Operation;
@@ -15,8 +16,9 @@ import junit.framework.Assert;
 
 @SuppressWarnings("deprecation")
 class ArithmeticTest {
-	
-	// Please note these are ad-hoc tests made on the fly to assist development of several features.
+
+	// Please note these are ad-hoc tests made on the fly to assist development of
+	// several features.
 	// Do not interpret these as proper functionality testing or expected behaviour.
 
 	@Test
@@ -130,6 +132,14 @@ class ArithmeticTest {
 		// if (random.nextBoolean()) // Mutate again
 		// return mutate(new Individual(mutatedRepresentation));
 		return new Individual(mutatedRepresentation);
+	}
+
+	@Test
+	void isZeroTest() {
+		Operation power = new Power(new NumericValueVariable(0, false),
+				new Addition(new NumericValueVariable(true), new NumericValueVariable(false)));
+		System.out.println(power);
+		System.out.println(power.simplify());
 	}
 
 }

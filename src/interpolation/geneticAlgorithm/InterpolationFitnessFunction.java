@@ -50,10 +50,11 @@ public class InterpolationFitnessFunction {
 		}
 
 		double length = representation.getLength();
-		// pointShape weights 3 times more than basic error importance-wise
-		double fitness = (totalError + (pointShapeError * 3.0)); // * (size - landedPoints);
+		double fitness = (totalError + (pointShapeError)); // * (size - landedPoints);
 		// Less fitness value is better
-		return fitness * (1.0 + length * lengthPenalty); // To encourage shorter equations, each additional length
-															// piece represents a certain % fitness increment
+		if (length < 5)
+			return fitness;
+		return fitness * (1.0 + (length-5) * lengthPenalty); // To encourage shorter equations, each additional length
+															// piece from 5 represents a certain % fitness increment
 	}
 }
