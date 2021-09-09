@@ -1,7 +1,5 @@
 package interpolation.arithmetic;
 
-import javax.management.remote.SubjectDelegationPermission;
-
 import interpolation.geneticAlgorithm.GeneticFunctions;
 
 public class Log extends Operation {

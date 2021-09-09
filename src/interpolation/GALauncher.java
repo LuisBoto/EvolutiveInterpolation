@@ -2,7 +2,6 @@ package interpolation;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javax.script.ScriptException;
 
 import interpolation.geneticAlgorithm.GeneticFunctions;
@@ -13,43 +12,42 @@ import interpolation.geneticAlgorithm.InterpolationGeneticAlgorithm;
 public class GALauncher {
 
 	public static void main(String[] args) throws ScriptException {
-		/*
-		 * String points = args[0]; double[] pointList = new
-		 * double[points.split(",").length]; int i = 0; for (String val :
-		 * points.split("[")[1].split("]")[0].split(",")) { pointList[i] =
-		 * Double.parseDouble(val); i++; }
-		 * 
-		 * int reproduce = Integer.parseInt(args[1]); int mutate =
-		 * Integer.parseInt(args[2]); int popSize = Integer.parseInt(args[3]); double
-		 * crossoverProbability = Double.parseDouble(args[4]); double
-		 * mutationProbability = Double.parseDouble(args[5]); int maxTime =
-		 * Integer.parseInt(args[6]) * 1000;
-		 */
-
-		double[] pointListX = new double[150];
-		double[] pointListY = new double[150];
-		double j = 0;
-		for (double i = 0; i < 150; i++) {
-			pointListX[(int) i] = j;
-			pointListY[(int) i] = (j / Math.pow(3.14, -j)) * Math.tan(Math.sqrt(Math.pow(j, -2.0 * j))) + (j / 20.0) + Math.cos(j);
-			j += 0.1;
+		double[] pointListX = null, pointListY = null;
+		int popSize = 0, maxTime = 0;
+		double errorMargin = 0, crossoverRate = 0, mutationRate = 0, lengthPenalty = 0;
+		boolean allowMultipleMutations = false;
+		System.out.println("Parsing parameter data...");
+		try {
+			pointListX = new double[args[0].split(" ").length];
+			pointListY = new double[args[0].split(" ").length];
+			String[] pointsx = args[0].replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(", ", " ").split(" ");
+			String[] pointsy = args[1].replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(", ", " ").split(" ");
+			for (int i = 0; i < pointsx.length; i++) {
+				pointListX[i] = Double.parseDouble(pointsx[i]);
+				pointListY[i] = Double.parseDouble(pointsy[i]);
+			}
+			errorMargin = Double.parseDouble(args[2]);
+			popSize = Integer.parseInt(args[3]);
+			crossoverRate = Double.parseDouble(args[4]);
+			mutationRate = Double.parseDouble(args[5]);
+			lengthPenalty = Double.parseDouble(args[6]);
+			allowMultipleMutations = Integer.parseInt(args[7]) == 1;
+			maxTime = Integer.parseInt(args[8]) * 1000;
+		} catch (Exception e) {
+			System.out.println("Error parsing parameters, please check your input:");
+			e.printStackTrace();
+			System.exit(1);
 		}
-		double errorMargin = 0.01;
-		int popSize = 2500;
-		double crossoverProbability = 0.70;
-		double mutationProbability = 0.95;
-		int maxTime = 0*1000;
-		double lengthPenalty = 0.1;
-		boolean allowMultipleMutations = true;
-		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverProbability, mutationProbability,
-				lengthPenalty, allowMultipleMutations, maxTime);
+
+		callGeneticAlgorithm(pointListX, pointListY, errorMargin, popSize, crossoverRate, mutationRate, lengthPenalty,
+				allowMultipleMutations, maxTime);
 	}
 
 	private static void callGeneticAlgorithm(double[] pointListX, double[] pointListY, double errorMargin,
-			int populationSize, double crossoverProbability, double mutationProbability, double lengthPenalty,
+			int populationSize, double crossoverRate, double mutationRate, double lengthPenalty,
 			boolean allowMultipleMutations, int maxTime) {
 
-		System.out.println("--- Running Genetic Algorithm ---");
+		System.out.println("--- Running Interpolation Genetic Algorithm ---");
 		InterpolationFitnessFunction fitnessFunction = GeneticFunctions.getFitnessFunction(pointListX, pointListY,
 				errorMargin, lengthPenalty);
 
@@ -57,11 +55,11 @@ public class GALauncher {
 		Collection<Individual> population = new ArrayList<Individual>();
 		for (int i = 0; i < populationSize; i++)
 			population.add(GeneticFunctions.generateRandomIndividual());
-		InterpolationGeneticAlgorithm ga = new InterpolationGeneticAlgorithm(crossoverProbability, mutationProbability,
-				maxTime);
-
+		InterpolationGeneticAlgorithm ga = new InterpolationGeneticAlgorithm(crossoverRate, mutationRate, maxTime);
 		System.out.println("Starting evolution");
 		Individual bestIndividual = ga.geneticAlgorithm(population, fitnessFunction, allowMultipleMutations);
+
+		// Printing results
 		System.out.println("\nBest Individual:\n" + bestIndividual.getRepresentation());
 		String pointsOg = "Originals = ";
 		for (int i = 0; i < pointListX.length; i++) {
@@ -72,7 +70,6 @@ public class GALauncher {
 		for (int i = 0; i < pointListX.length; i++) {
 			points += bestIndividual.getRepresentation().computeValue(pointListX[i]) + " ; ";
 		}
-		// fitnessFunction.apply(bestIndividual);
 		System.out.println(points);
 		System.out.println("Population Size = " + populationSize);
 		System.out.println("Iterations = " + ga.getGenerations());

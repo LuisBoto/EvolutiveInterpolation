@@ -11,8 +11,8 @@ import interpolation.arithmetic.Operation;
 
 public class InterpolationGeneticAlgorithm {
 
-	protected double crossoverProbability;
-	protected double mutationProbability;
+	protected double crossoverRate;
+	protected double mutationRate;
 	protected int maxTime;
 	protected Random random;
 	private Individual bestIndividual;
@@ -20,14 +20,14 @@ public class InterpolationGeneticAlgorithm {
 	private int generations;
 	private boolean allowMultipleMutations;
 
-	public InterpolationGeneticAlgorithm(double crossoverProbability, double mutationProbability, int maxTime) {
-		this.crossoverProbability = crossoverProbability;
-		this.mutationProbability = mutationProbability;
+	public InterpolationGeneticAlgorithm(double crossoverRate, double mutationRate, int maxTime) {
+		this.crossoverRate = crossoverRate;
+		this.mutationRate = mutationRate;
 		this.maxTime = maxTime;
 		this.random = new Random();
 
-		assert (this.mutationProbability >= 0.0 && this.mutationProbability <= 1.0);
-		assert (this.crossoverProbability >= 0.0 && this.crossoverProbability <= 1.0);
+		assert (this.mutationRate >= 0.0 && this.mutationRate <= 1.0);
+		assert (this.crossoverRate >= 0.0 && this.crossoverRate <= 1.0);
 	}
 
 	private boolean stopCondition() {
@@ -102,12 +102,12 @@ public class InterpolationGeneticAlgorithm {
 		for (int i = 0; i < population.size() - 1; i++) { // -1 for elitism
 			Individual x = randomSelection(population);
 			Individual child = x;
-			if (random.nextDouble() <= crossoverProbability) {
+			if (random.nextDouble() <= crossoverRate) {
 				Individual y = randomSelection(population);
 				child = this.reproduce(x, y);
 			}
 
-			if (random.nextDouble() <= mutationProbability) {
+			if (random.nextDouble() <= mutationRate) {
 				child = this.mutate(child);
 			}
 			newPopulation.add(child);
