@@ -1,4 +1,4 @@
-# EvolutiveInterpolation
+# Evolutive Interpolation
 This evolutionary algorithm uses two-dimension coordinates (encoded as 'X' and 'Y' arrays of double type values), to try and find a one variable arithmetic equation that interpolates them as closely as possible.
 
 ![Interpolation example](./interpolationExample.png)
